@@ -7,7 +7,8 @@
 
 import UIKit
 
-public class Button: UIButton, Decoratable {
+public class BaseButton: UIButton, Decoratable {
+
     public typealias Style = ButtonStyle
     
     private var iconImageView: UIImageView?
@@ -18,6 +19,8 @@ public class Button: UIButton, Decoratable {
     private var disabledBorderColor: ColorScheme?
     private var currentStyleType: ButtonStyleType?
     
+    // MARK: - Public
+    
     public override var isHighlighted: Bool {
         didSet { updateState() }
     }
@@ -27,43 +30,66 @@ public class Button: UIButton, Decoratable {
     }
     
     public func decorate(with style: Style) {
-        switch style.type {
-        case .primary:
-            setupPrimaryStyle(with: style)
-        case .secondary:
-            setupSecondaryStyle(with: style)
-        }
-        
+        configureStyle(type: style.type)
         configureTypography(with: style.fontProfile)
         configureIconAndText(with: style.icon, fontProfile: style.fontProfile, spacing: style.spacing)
         applyEffects(style.effect)
     }
     
-    private func setupPrimaryStyle(with style: Style) {
-        guard case let .primary(defaultColor, _, _, _) = style.type else { return }
-        let pressedColor = style.type.resolvedPressedColor
-        let disabledColor = style.type.resolvedDisabledColor
-        let iconTint = style.type.resolvedIconTintColor
-        
-        backgroundColor = defaultColor.color
-        setBackgroundImage(UIImage(color: pressedColor.color), for: .highlighted)
-        setBackgroundImage(UIImage(color: disabledColor.color), for: .disabled)
-        iconImageView?.tintColor = iconTint.color
+    public func applyBackgroundColor(_ color: ColorScheme) {
+        self.backgroundColor = color.color
     }
     
-    private func setupSecondaryStyle(with style: Style) {
-        guard case let .secondary(borderWidth, defaultColor, _, _, _) = style.type else { return }
+    public func applyTintColor(_ color: ColorScheme) {
+        self.iconImageView?.tintColor = color.color
+    }
+    
+    func setIcon(_ image: UIImage) {
+        if self.iconImageView == nil {
+            self.iconImageView = UIImageView()
+            if let stackView = self.stackView {
+                stackView.insertArrangedSubview(self.iconImageView!, at: 0)
+            }
+        }
+        self.iconImageView?.image = image
+    }
+    
+    func setIconTintColor(_ color: ColorScheme) {
+        self.iconImageView?.tintColor = color.color
+    }
+    
+    func setIconVisibility(_ isVisible: Bool) {
+        self.iconImageView?.isHidden = !isVisible
+    }
+    
+    // MARK: - Private
+    
+    private func configureStyle(type: ButtonStyleType) {
+        currentStyleType = type
         
-        let pressedBorderColor = style.type.resolvedPressedColor
-        let disabledBorderColor = style.type.resolvedDisabledColor
-        let iconTint = style.type.resolvedIconTintColor
-        
+        switch type {
+        case .primary(let defaultColor, _, _, _):
+            setupPrimaryStyle(withDefaultColor: defaultColor, type: type)
+            
+        case .secondary(let borderWidth, let defaultColor, _, _, _):
+            setupSecondaryStyle(borderWidth: borderWidth, defaultColor: defaultColor, type: type)
+        }
+    }
+    
+    private func setupPrimaryStyle(withDefaultColor defaultColor: ColorScheme, type: ButtonStyleType) {
+        applyBackgroundColor(defaultColor)
+        setBackgroundImage(UIImage(color: type.resolvedPressedColor.color), for: .highlighted)
+        setBackgroundImage(UIImage(color: type.resolvedDisabledColor.color), for: .disabled)
+        applyTintColor(type.resolvedIconTintColor)
+    }
+    
+    private func setupSecondaryStyle(borderWidth: CGFloat, defaultColor: ColorScheme, type: ButtonStyleType) {
         layer.borderWidth = borderWidth
         self.defaultBorderColor = defaultColor
-        self.pressedBorderColor = pressedBorderColor
-        self.disabledBorderColor = disabledBorderColor
+        self.pressedBorderColor = type.resolvedPressedColor
+        self.disabledBorderColor = type.resolvedDisabledColor
         layer.borderColor = defaultColor.color.cgColor
-        iconImageView?.tintColor = iconTint.color
+        applyTintColor(type.resolvedIconTintColor)
     }
     
     private func configureTypography(with fontProfile: FontProfile?) {
@@ -96,18 +122,24 @@ public class Button: UIButton, Decoratable {
     }
     
     private func applyEffects(_ effect: Effects?) {
-        if let shadow = effect?.shadow {
-            self.layer.shadowColor = shadow.color.cgColor
-            self.layer.shadowOffset = shadow.offset
-            self.layer.shadowRadius = shadow.radius
-            self.layer.shadowOpacity = shadow.opacity
-        }
-        
-        if let rounded = effect?.rounded, rounded {
+        applyShadow(effect?.shadow)
+        applyRoundedEffect(rounded: effect?.rounded, cornerRadius: effect?.cornerRadius)
+    }
+    
+    private func applyRoundedEffect(rounded: Bool?, cornerRadius: CGFloat?) {
+        if let rounded = rounded, rounded {
             self.layer.cornerRadius = self.bounds.height / 2
-        } else if let cornerRadius = effect?.cornerRadius {
+        } else if let cornerRadius = cornerRadius {
             self.layer.cornerRadius = cornerRadius
         }
+    }
+    
+    private func applyShadow(_ shadow: Shadow?) {
+        guard let shadow = shadow else { return }
+        self.layer.shadowColor = shadow.color.cgColor
+        self.layer.shadowOffset = shadow.offset
+        self.layer.shadowRadius = shadow.radius
+        self.layer.shadowOpacity = shadow.opacity
     }
     
     private func updateState() {
@@ -116,7 +148,6 @@ public class Button: UIButton, Decoratable {
             layer.borderColor = borderColor?.cgColor
         }
     }
-    
 }
 
 extension UIImage {
