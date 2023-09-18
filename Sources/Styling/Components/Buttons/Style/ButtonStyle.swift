@@ -14,15 +14,3 @@ public struct ButtonStyle {
     var effect: Effects?
     var spacing: Spacing?
 }
-
-public enum ButtonStyleType: Equatable {
-    case primary(defaultColor: ColorScheme,
-                 pressedColor: ColorScheme,
-                 disabledColor: ColorScheme,
-                 iconTintColor: ColorScheme?)
-    case secondary(borderWidth: CGFloat,
-                   defaultBorderColor: ColorScheme,
-                   pressedBorderColor: ColorScheme,
-                   disabledBorderColor: ColorScheme,
-                   iconTintColor: ColorScheme?)
-}

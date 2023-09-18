@@ -40,28 +40,30 @@ public class Button: UIButton, Decoratable {
     }
     
     private func setupPrimaryStyle(with style: Style) {
-        guard case let .primary(defaultColor,
-                                pressedColor,
-                                disabledColor,
-                                iconTintColor) = style.type else { return }
+        guard case let .primary(defaultColor, _, _, _) = style.type else { return }
+        let pressedColor = style.type.resolvedPressedColor
+        let disabledColor = style.type.resolvedDisabledColor
+        let iconTint = style.type.resolvedIconTintColor
+        
         backgroundColor = defaultColor.color
         setBackgroundImage(UIImage(color: pressedColor.color), for: .highlighted)
         setBackgroundImage(UIImage(color: disabledColor.color), for: .disabled)
-        iconImageView?.tintColor = iconTintColor?.color
+        iconImageView?.tintColor = iconTint.color
     }
     
     private func setupSecondaryStyle(with style: Style) {
-        guard case let .secondary(borderWidth,
-                                  defaultColor,
-                                  pressedColor,
-                                  disabledColor,
-                                  iconTintColor) = style.type else { return }
+        guard case let .secondary(borderWidth, defaultColor, _, _, _) = style.type else { return }
+        
+        let pressedBorderColor = style.type.resolvedPressedColor
+        let disabledBorderColor = style.type.resolvedDisabledColor
+        let iconTint = style.type.resolvedIconTintColor
+        
         layer.borderWidth = borderWidth
-        defaultBorderColor = defaultColor
-        pressedBorderColor = pressedColor
-        disabledBorderColor = disabledColor
+        self.defaultBorderColor = defaultColor
+        self.pressedBorderColor = pressedBorderColor
+        self.disabledBorderColor = disabledBorderColor
         layer.borderColor = defaultColor.color.cgColor
-        iconImageView?.tintColor = iconTintColor?.color
+        iconImageView?.tintColor = iconTint.color
     }
     
     private func configureTypography(with fontProfile: FontProfile?) {
