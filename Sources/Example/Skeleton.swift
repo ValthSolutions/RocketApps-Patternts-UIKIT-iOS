@@ -18,12 +18,18 @@ class Skeleton {
                     disabledColor: ColorScheme(light: .lightGray, dark: .darkGray)
                 ),
                 fontProfile: FontProfile(style: .title3Bold),
-                icon: nil,
+                icon: UIImage(systemName: "moon"),
+                iconPosition: .right,
                 effect:
                     Effects(shadow: Shadow(color: .black,
                                            offset: CGSize(width: 0, height: 2),
-                                           radius: 4, opacity: 0.2), cornerRadius: 8),
-                spacing: .step5
+                                           radius: 4, opacity: 0.2),
+                            cornerRadius: 8,
+                            hapticFeedback: .heavy,
+                            transformEffect: CGAffineTransform(scaleX: 0.95, y: 0.95)
+                     ),
+                spacing: .step1,
+                textColor: ColorScheme(light: .red, dark: .brown)
             )
         }
         

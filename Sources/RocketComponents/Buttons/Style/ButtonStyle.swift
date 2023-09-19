@@ -33,8 +33,12 @@ public struct ButtonStyle {
     /// If not provided, default spacing is applied.
     var spacing: Spacing?
     
+    /// Specifies the color of a text.
     var textColor: ColorScheme?
     
+    /// Specifies the position of icon relatively a text.
+    var iconPosition: Position?
+
     /// Initializes a new `ButtonStyle` with the specified attributes.
     ///
     /// - Parameters:
@@ -46,6 +50,7 @@ public struct ButtonStyle {
     public init(type: ButtonStyleType,
                 fontProfile: FontProfile? = nil,
                 icon: UIImage? = nil,
+                iconPosition: Position? = nil,
                 effect: Effects? = nil,
                 spacing: Spacing? = nil,
                 textColor: ColorScheme? = ColorScheme(light: .black, dark: .white)
@@ -54,6 +59,7 @@ public struct ButtonStyle {
         self.textColor = textColor
         self.fontProfile = fontProfile
         self.icon = icon
+        self.iconPosition = iconPosition
         self.effect = effect
         self.spacing = spacing
     }

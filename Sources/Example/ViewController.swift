@@ -8,6 +8,10 @@
 import UIKit
 import RocketComponents
 
+/*
+ 4 colors for font
+ */
+
 class ViewController: UIViewController {
     
     let testButton = BaseButton(type: .system)

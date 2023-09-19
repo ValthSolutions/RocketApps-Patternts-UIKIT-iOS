@@ -21,6 +21,7 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     private var currentEffect: Effects?
     private var originalTransform: CGAffineTransform?
     private var title: String?
+    
     // MARK: - Public
     
     public override var isHighlighted: Bool {
@@ -44,7 +45,8 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
         configureIconAndText(with: style.icon,
                              fontProfile: style.fontProfile,
                              spacing: style.spacing,
-                             textColor: style.textColor)
+                             textColor: style.textColor,
+                             iconPosition: style.iconPosition)
         applyEffects(style.effect)
         if let blurStyle = style.effect?.blur?.style {
             self.addBlur(effectStyle: blurStyle)
@@ -150,22 +152,36 @@ extension BaseButton {
     private func configureIconAndText(with icon: UIImage?,
                                       fontProfile: FontProfile?,
                                       spacing: Spacing?,
-                                      textColor: ColorScheme?
+                                      textColor: ColorScheme?,
+                                      iconPosition: Position?
     ) {
         let label = UILabel()
+        label.textColor = textColor?.color
         label.text = title
         label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily,
                               style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
-           
-        label.isUserInteractionEnabled = true
-        if let textColor = textColor {
-            self.setTitleColor(textColor.color, for: .normal)
+        label.textAlignment = .center
+        
+        guard let icon = icon, stackView == nil else {
+            self.addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                label.centerYAnchor.constraint(equalTo: centerYAnchor),
+                label.centerXAnchor.constraint(equalTo: centerXAnchor)
+            ])
+            return
         }
         
-        guard let icon = icon, stackView == nil else { return }
         let iconIV = UIImageView(image: icon)
-
-        let hStack = UIStackView(arrangedSubviews: [iconIV, label])
+        var arrangedSubviews: [UIView] = []
+        
+        if iconPosition == .left {
+            arrangedSubviews = [iconIV, label]
+        } else {
+            arrangedSubviews = [label, iconIV]
+        }
+        
+        let hStack = UIStackView(arrangedSubviews: arrangedSubviews)
         hStack.spacing = spacing?.rawValue ?? Spacing.step3.rawValue
         hStack.alignment = .center
         hStack.axis = .horizontal
