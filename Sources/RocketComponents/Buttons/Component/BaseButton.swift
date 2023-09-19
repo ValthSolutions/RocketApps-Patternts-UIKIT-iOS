@@ -8,7 +8,7 @@
 import UIKit
 
 public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
-
+    
     public typealias Style = ButtonStyle
     
     private var iconImageView: UIImageView?
@@ -86,10 +86,35 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     }
 }
 
-// MARK: - Private
+// MARK: - Effects Configuration
 
-extension BaseButton {
-    private func configureStyle(type: ButtonStyleType) {
+private extension BaseButton {
+    func applyEffects(_ effect: Effects?) {
+        applyShadow(effect?.shadow)
+        applyRoundedEffect(rounded: effect?.rounded, cornerRadius: effect?.cornerRadius)
+    }
+    
+    func applyRoundedEffect(rounded: Bool?, cornerRadius: CGFloat?) {
+        if let rounded = rounded, rounded {
+            self.layer.cornerRadius = self.bounds.height / 2
+        } else if let cornerRadius = cornerRadius {
+            self.layer.cornerRadius = cornerRadius
+        }
+    }
+    
+    func applyShadow(_ shadow: Shadow?) {
+        guard let shadow = shadow else { return }
+        self.layer.shadowColor = shadow.color.cgColor
+        self.layer.shadowOffset = shadow.offset
+        self.layer.shadowRadius = shadow.radius
+        self.layer.shadowOpacity = shadow.opacity
+    }
+}
+
+// MARK: - Typography and Style Configuration
+
+private extension BaseButton {
+    func configureStyle(type: ButtonStyleType) {
         currentStyleType = type
         
         switch type {
@@ -101,30 +126,14 @@ extension BaseButton {
         }
     }
     
-    private func handleTransformAndHaptic() {
-        guard let effect = currentEffect else { return }
-
-        if isHighlighted {
-            if let hapticStyle = effect.hapticFeedback {
-                let generator = UIImpactFeedbackGenerator(style: hapticStyle)
-                generator.impactOccurred()
-            }
-            
-            if let transformEffect = effect.transformEffect {
-                animateTransform(to: transformEffect)
-            }
-        } else {
-            animateTransform(to: self.originalTransform ?? CGAffineTransform.identity)
-        }
-    }
-
-    private func animateTransform(to transform: CGAffineTransform) {
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: [], animations: {
-            self.transform = transform
-        }, completion: nil)
+    func configureTypography(with fontProfile: FontProfile?) {
+        guard let fontProfile = fontProfile else { return }
+        self.applyTypography(fontFamily: fontProfile.fontFamily,
+                             style: fontProfile.style,
+                             text: self.titleLabel?.text ?? "")
     }
     
-    private func setupPrimaryStyle(withDefaultColor defaultColor: ColorScheme, type: ButtonStyleType) {
+    func setupPrimaryStyle(withDefaultColor defaultColor: ColorScheme, type: ButtonStyleType) {
         applyBackgroundColor(defaultColor)
         setBackgroundImage(UIImage(color: type.resolvedPressedColor.color,
                                    cornerRadius: self.layer.cornerRadius), for: .highlighted)
@@ -133,7 +142,7 @@ extension BaseButton {
         applyTintColor(type.resolvedIconTintColor)
     }
     
-    private func setupSecondaryStyle(borderWidth: CGFloat, defaultColor: ColorScheme, type: ButtonStyleType) {
+    func setupSecondaryStyle(borderWidth: CGFloat, defaultColor: ColorScheme, type: ButtonStyleType) {
         layer.borderWidth = borderWidth
         self.defaultBorderColor = defaultColor
         self.pressedBorderColor = type.resolvedPressedColor
@@ -141,19 +150,58 @@ extension BaseButton {
         layer.borderColor = defaultColor.color.cgColor
         applyTintColor(type.resolvedIconTintColor)
     }
-    
-    private func configureTypography(with fontProfile: FontProfile?) {
-        guard let fontProfile = fontProfile else { return }
-        self.applyTypography(fontFamily: fontProfile.fontFamily,
-                             style: fontProfile.style,
-                             text: self.titleLabel?.text ?? "")
+}
+
+// MARK: - Icon and Text Layout
+
+private extension BaseButton {
+
+    func configureIconAndText(with icon: UIImage?,
+                              fontProfile: FontProfile?,
+                              spacing: Spacing?,
+                              textColor: ColorScheme?,
+                              iconPosition: Position?
+    ) {
+        guard let icon = icon, stackView == nil else {
+            setupLabel(with: textColor, fontProfile: fontProfile)
+            return
+        }
+        
+        let iconIV = createIconView(with: icon)
+        configureAndAddStackView(with: iconIV,
+                                 textColor: textColor,
+                                 fontProfile: fontProfile,
+                                 spacing: spacing,
+                                 iconPosition: iconPosition)
     }
     
-    private func configureIconAndText(with icon: UIImage?,
-                                      fontProfile: FontProfile?,
-                                      spacing: Spacing?,
-                                      textColor: ColorScheme?,
-                                      iconPosition: Position?
+    func setupLabel(with textColor: ColorScheme?, fontProfile: FontProfile?) {
+        let label = UILabel()
+        label.textColor = textColor?.color
+        label.text = title
+        label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily,
+                              style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = false
+        
+        self.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+            label.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
+    }
+    
+    func createIconView(with icon: UIImage) -> UIImageView {
+        let iconIV = UIImageView(image: icon)
+        return iconIV
+    }
+    
+    func configureAndAddStackView(with iconIV: UIImageView,
+                                  textColor: ColorScheme?,
+                                  fontProfile: FontProfile?,
+                                  spacing: Spacing?,
+                                  iconPosition: Position?
     ) {
         let label = UILabel()
         label.textColor = textColor?.color
@@ -161,18 +209,8 @@ extension BaseButton {
         label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily,
                               style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
         label.textAlignment = .center
+        label.isUserInteractionEnabled = false
         
-        guard let icon = icon, stackView == nil else {
-            self.addSubview(label)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                label.centerYAnchor.constraint(equalTo: centerYAnchor),
-                label.centerXAnchor.constraint(equalTo: centerXAnchor)
-            ])
-            return
-        }
-        
-        let iconIV = UIImageView(image: icon)
         var arrangedSubviews: [UIView] = []
         
         if iconPosition == .left {
@@ -193,36 +231,43 @@ extension BaseButton {
             hStack.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             hStack.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
+        hStack.isUserInteractionEnabled = false
         self.stackView = hStack
         self.iconImageView = iconIV
     }
     
-    private func applyEffects(_ effect: Effects?) {
-        applyShadow(effect?.shadow)
-        applyRoundedEffect(rounded: effect?.rounded, cornerRadius: effect?.cornerRadius)
-    }
-    
-    private func applyRoundedEffect(rounded: Bool?, cornerRadius: CGFloat?) {
-        if let rounded = rounded, rounded {
-            self.layer.cornerRadius = self.bounds.height / 2
-        } else if let cornerRadius = cornerRadius {
-            self.layer.cornerRadius = cornerRadius
-        }
-    }
-    
-    private func applyShadow(_ shadow: Shadow?) {
-        guard let shadow = shadow else { return }
-        self.layer.shadowColor = shadow.color.cgColor
-        self.layer.shadowOffset = shadow.offset
-        self.layer.shadowRadius = shadow.radius
-        self.layer.shadowOpacity = shadow.opacity
-    }
-    
-    private func updateState() {
+    func updateState() {
         if case .secondary = currentStyleType {
             let borderColor: UIColor? = !isEnabled ? disabledBorderColor?.color : (isHighlighted ? pressedBorderColor?.color : defaultBorderColor?.color)
             layer.borderColor = borderColor?.cgColor
         }
         applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
+    }
+}
+
+// MARK: - Transform
+
+private extension BaseButton {
+    func handleTransformAndHaptic() {
+        guard let effect = currentEffect else { return }
+        
+        if isHighlighted {
+            if let hapticStyle = effect.hapticFeedback {
+                let generator = UIImpactFeedbackGenerator(style: hapticStyle)
+                generator.impactOccurred()
+            }
+            
+            if let transformEffect = effect.transformEffect {
+                animateTransform(to: transformEffect)
+            }
+        } else {
+            animateTransform(to: self.originalTransform ?? CGAffineTransform.identity)
+        }
+    }
+    
+    func animateTransform(to transform: CGAffineTransform) {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: [], animations: {
+            self.transform = transform
+        }, completion: nil)
     }
 }
