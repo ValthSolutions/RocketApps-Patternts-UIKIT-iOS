@@ -11,7 +11,7 @@ public struct ColorScheme: Equatable {
     var light: UIColor
     var dark: UIColor
     
-    init(light: UIColor = .black, dark: UIColor = .white) {
+    public init(light: UIColor = .black, dark: UIColor = .white) {
         self.light = light
         self.dark = dark
     }

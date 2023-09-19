@@ -1,10 +1,10 @@
 import UIKit
 
-struct FontProfile {
+public struct FontProfile {
     let fontFamily: String
     let style: Typography.Style
-
-    init(fontFamily: String = Typography.defaultFontFamily, style: Typography.Style) {
+    
+    public init(fontFamily: String = Typography.defaultFontFamily, style: Typography.Style) {
         self.fontFamily = fontFamily
         self.style = style
     }
@@ -12,8 +12,8 @@ struct FontProfile {
 
 public struct Typography {
     
-    static var defaultFontFamily = "HelveticaNeue"
-
+    public static var defaultFontFamily = "HelveticaNeue"
+    
     static func font(for profile: FontProfile) -> UIFont {
         let attributes = profile.style.attributes
         if let customFont = UIFont(name: profile.fontFamily, size: attributes.fontSize) {
@@ -22,12 +22,12 @@ public struct Typography {
             return UIFont.systemFont(ofSize: attributes.fontSize, weight: attributes.fontWeight)
         }
     }
-
+    
     static func attributedString(for profile: FontProfile, text: String) -> NSAttributedString {
         let attributes = profile.style.attributes
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = attributes.lineHeight / attributes.fontSize
-
+        
         return NSAttributedString(
             string: text,
             attributes: [
@@ -39,23 +39,49 @@ public struct Typography {
     }
 }
 
+/// Extends the `Typography` structure to define a variety of text styles.
+///
+/// These styles represent a collection of font attributes including size,
+/// weight, line height, and letter spacing. They can be utilized throughout
+/// an application to maintain consistent typography and make sure text
+/// remains readable and visually appealing.
 extension Typography {
+    
+    /// Represents distinct typographic styles.
+    ///
+    /// Each style defines attributes related to font size, weight, line height,
+    /// and letter spacing, providing a means to apply consistent typography throughout
+    /// an application.
     public enum Style {
+        /// Font Size: 34px
         case largeTitle
+        /// Font Size: 28px
         case title1Bold
+        /// Font Size: 22px
         case title2Bold
+        /// Font Size: 20px
         case title3Bold
+        /// Font Size: 20px
         case title3Semibold
+        /// Font Size: 20px
         case title3Regular
+        /// Font Size: 17px
         case body1Semibold
+        /// Font Size: 17px
         case body1Medium
+        /// Font Size: 17px
         case body1Regular
+        /// Font Size: 15px
         case body2Semibold
+        /// Font Size: 15px
         case body2Regular
+        /// Font Size: 13px
         case caption1Regular
+        /// Font Size: 11px
         case caption1Semibold
+        /// Font Size: 10px
         case caption3Regular
-
+        
         var attributes: (fontSize: CGFloat, fontWeight: UIFont.Weight, lineHeight: CGFloat, letterSpacing: CGFloat) {
             switch self {
             case .largeTitle:

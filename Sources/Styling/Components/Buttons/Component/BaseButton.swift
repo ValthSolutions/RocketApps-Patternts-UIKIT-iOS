@@ -18,7 +18,8 @@ public class BaseButton: UIButton, Decoratable {
     private var pressedBorderColor: ColorScheme?
     private var disabledBorderColor: ColorScheme?
     private var currentStyleType: ButtonStyleType?
-    
+    private var currentEffect: Effects?
+
     // MARK: - Public
     
     public override var isHighlighted: Bool {
@@ -34,6 +35,8 @@ public class BaseButton: UIButton, Decoratable {
         configureTypography(with: style.fontProfile)
         configureIconAndText(with: style.icon, fontProfile: style.fontProfile, spacing: style.spacing)
         applyEffects(style.effect)
+        self.currentEffect = style.effect
+        self.clipsToBounds = true
     }
     
     public func applyBackgroundColor(_ color: ColorScheme) {
@@ -44,7 +47,7 @@ public class BaseButton: UIButton, Decoratable {
         self.iconImageView?.tintColor = color.color
     }
     
-    func setIcon(_ image: UIImage) {
+    public func setIcon(_ image: UIImage) {
         if self.iconImageView == nil {
             self.iconImageView = UIImageView()
             if let stackView = self.stackView {
@@ -54,11 +57,11 @@ public class BaseButton: UIButton, Decoratable {
         self.iconImageView?.image = image
     }
     
-    func setIconTintColor(_ color: ColorScheme) {
+    public func setIconTintColor(_ color: ColorScheme) {
         self.iconImageView?.tintColor = color.color
     }
     
-    func setIconVisibility(_ isVisible: Bool) {
+    public func setIconVisibility(_ isVisible: Bool) {
         self.iconImageView?.isHidden = !isVisible
     }
     
@@ -78,8 +81,10 @@ public class BaseButton: UIButton, Decoratable {
     
     private func setupPrimaryStyle(withDefaultColor defaultColor: ColorScheme, type: ButtonStyleType) {
         applyBackgroundColor(defaultColor)
-        setBackgroundImage(UIImage(color: type.resolvedPressedColor.color), for: .highlighted)
-        setBackgroundImage(UIImage(color: type.resolvedDisabledColor.color), for: .disabled)
+        setBackgroundImage(UIImage(color: type.resolvedPressedColor.color,
+                                   cornerRadius: self.layer.cornerRadius), for: .highlighted)
+        setBackgroundImage(UIImage(color: type.resolvedDisabledColor.color,
+                                   cornerRadius: self.layer.cornerRadius), for: .disabled)
         applyTintColor(type.resolvedIconTintColor)
     }
     
@@ -94,7 +99,9 @@ public class BaseButton: UIButton, Decoratable {
     
     private func configureTypography(with fontProfile: FontProfile?) {
         guard let fontProfile = fontProfile else { return }
-        self.applyTypography(fontFamily: fontProfile.fontFamily, style: fontProfile.style, text: self.titleLabel?.text ?? "")
+        self.applyTypography(fontFamily: fontProfile.fontFamily,
+                             style: fontProfile.style,
+                             text: self.titleLabel?.text ?? "")
     }
     
     private func configureIconAndText(with icon: UIImage?,
@@ -147,14 +154,20 @@ public class BaseButton: UIButton, Decoratable {
             let borderColor: UIColor? = !isEnabled ? disabledBorderColor?.color : (isHighlighted ? pressedBorderColor?.color : defaultBorderColor?.color)
             layer.borderColor = borderColor?.cgColor
         }
+        applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
     }
 }
 
 extension UIImage {
-    convenience init(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
+    convenience init(color: UIColor, cornerRadius: CGFloat = 0, size: CGSize = CGSize(width: 1, height: 1)) {
         UIGraphicsBeginImageContext(size)
         color.setFill()
-        UIRectFill(CGRect(origin: .zero, size: size))
+        let rect = CGRect(origin: .zero, size: size)
+        if cornerRadius > 0 {
+            UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).fill()
+        } else {
+            UIRectFill(rect)
+        }
         let image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         self.init(data: image.pngData()!)!

@@ -7,6 +7,6 @@
 
 import UIKit
 
-struct Blur {
+public struct Blur {
     var style: UIBlurEffect.Style
 }

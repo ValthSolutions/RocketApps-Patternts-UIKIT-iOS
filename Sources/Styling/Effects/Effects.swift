@@ -7,9 +7,16 @@
 
 import UIKit
 
-struct Effects {
+public struct Effects {
     var shadow: Shadow?
     var blur: Blur?
     var cornerRadius: CGFloat?
     var rounded: Bool?
+    
+    public init(shadow: Shadow? = nil, blur: Blur? = nil, cornerRadius: CGFloat? = nil, rounded: Bool? = nil) {
+        self.shadow = shadow
+        self.blur = blur
+        self.cornerRadius = cornerRadius
+        self.rounded = rounded
+    }
 }
