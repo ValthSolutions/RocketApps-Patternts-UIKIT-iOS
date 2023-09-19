@@ -56,6 +56,7 @@ public class BaseTextView: UITextView, Decoratable {
     
     private func applyShadow(_ shadow: Shadow?) {
         guard let shadow = shadow else { return }
+        self.clipsToBounds = false
         self.layer.shadowColor = shadow.color.cgColor
         self.layer.shadowOffset = shadow.offset
         self.layer.shadowRadius = shadow.radius

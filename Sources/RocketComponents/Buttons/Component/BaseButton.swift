@@ -19,15 +19,23 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     private var disabledBorderColor: ColorScheme?
     private var currentStyleType: ButtonStyleType?
     private var currentEffect: Effects?
-
+    private var originalTransform: CGAffineTransform?
+    private var title: String?
     // MARK: - Public
     
     public override var isHighlighted: Bool {
-        didSet { updateState() }
+        didSet {
+            updateState()
+            handleTransformAndHaptic()
+        }
     }
     
     public override var isEnabled: Bool {
         didSet { updateState() }
+    }
+    
+    public override func setTitle(_ title: String?, for state: UIControl.State) {
+        self.title = title
     }
     
     public func decorate(with style: Style) {
@@ -41,7 +49,10 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
         if let blurStyle = style.effect?.blur?.style {
             self.addBlur(effectStyle: blurStyle)
         }
-
+        if let transformEffect = style.effect?.transformEffect {
+            self.originalTransform = self.transform
+            self.currentEffect?.transformEffect = transformEffect
+        }
         self.currentEffect = style.effect
         self.clipsToBounds = true
     }
@@ -71,9 +82,11 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     public func setIconVisibility(_ isVisible: Bool) {
         self.iconImageView?.isHidden = !isVisible
     }
-    
-    // MARK: - Private
-    
+}
+
+// MARK: - Private
+
+extension BaseButton {
     private func configureStyle(type: ButtonStyleType) {
         currentStyleType = type
         
@@ -84,6 +97,29 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
         case .secondary(let borderWidth, let defaultColor, _, _, _):
             setupSecondaryStyle(borderWidth: borderWidth, defaultColor: defaultColor, type: type)
         }
+    }
+    
+    private func handleTransformAndHaptic() {
+        guard let effect = currentEffect else { return }
+
+        if isHighlighted {
+            if let hapticStyle = effect.hapticFeedback {
+                let generator = UIImpactFeedbackGenerator(style: hapticStyle)
+                generator.impactOccurred()
+            }
+            
+            if let transformEffect = effect.transformEffect {
+                animateTransform(to: transformEffect)
+            }
+        } else {
+            animateTransform(to: self.originalTransform ?? CGAffineTransform.identity)
+        }
+    }
+
+    private func animateTransform(to transform: CGAffineTransform) {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: [], animations: {
+            self.transform = transform
+        }, completion: nil)
     }
     
     private func setupPrimaryStyle(withDefaultColor defaultColor: ColorScheme, type: ButtonStyleType) {
@@ -116,20 +152,24 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
                                       spacing: Spacing?,
                                       textColor: ColorScheme?
     ) {
+        let label = UILabel()
+        label.text = title
+        label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily,
+                              style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
+           
+        label.isUserInteractionEnabled = true
+        if let textColor = textColor {
+            self.setTitleColor(textColor.color, for: .normal)
+        }
+        
         guard let icon = icon, stackView == nil else { return }
         let iconIV = UIImageView(image: icon)
-        let label = UILabel()
-        label.text = self.titleLabel?.text
-        label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily, style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
-                
-        if let textColor = textColor {
-            label.textColor = textColor.color
-        }
 
         let hStack = UIStackView(arrangedSubviews: [iconIV, label])
         hStack.spacing = spacing?.rawValue ?? Spacing.step3.rawValue
         hStack.alignment = .center
         hStack.axis = .horizontal
+        hStack.isUserInteractionEnabled = true
         
         self.addSubview(hStack)
         hStack.translatesAutoresizingMaskIntoConstraints = false
@@ -168,21 +208,5 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
             layer.borderColor = borderColor?.cgColor
         }
         applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
-    }
-}
-
-extension UIImage {
-    convenience init(color: UIColor, cornerRadius: CGFloat = 0, size: CGSize = CGSize(width: 1, height: 1)) {
-        UIGraphicsBeginImageContext(size)
-        color.setFill()
-        let rect = CGRect(origin: .zero, size: size)
-        if cornerRadius > 0 {
-            UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).fill()
-        } else {
-            UIRectFill(rect)
-        }
-        let image = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        self.init(data: image.pngData()!)!
     }
 }

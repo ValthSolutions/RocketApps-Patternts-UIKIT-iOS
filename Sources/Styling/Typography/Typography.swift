@@ -24,15 +24,12 @@ public struct Typography {
     }
     
     public static func attributedString(for profile: FontProfile, text: String) -> NSAttributedString {
-        let attributes = profile.style.attributes
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = attributes.lineHeight / attributes.fontSize
         
         return NSAttributedString(
             string: text,
             attributes: [
                 .font: font(for: profile),
-                .kern: attributes.letterSpacing,
                 .paragraphStyle: paragraphStyle
             ]
         )

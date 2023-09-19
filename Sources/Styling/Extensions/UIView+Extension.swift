@@ -8,6 +8,28 @@
 import UIKit
 
 public extension UIView {
+    enum ShadowLevel {
+        case light
+        case medium
+        case heavy
+        
+        var shadow: Shadow {
+            switch self {
+            case .light: return Shadow.light
+            case .medium: return Shadow.medium
+            case .heavy: return Shadow.heavy
+            }
+        }
+    }
+    
+    func addShadow(level: ShadowLevel) {
+        let shadow = level.shadow
+        self.layer.shadowColor = shadow.color.cgColor
+        self.layer.shadowOffset = shadow.offset
+        self.layer.shadowRadius = shadow.radius
+        self.layer.shadowOpacity = shadow.opacity
+        self.clipsToBounds = false
+    }
     
     @discardableResult
     func addBlur(effectStyle: UIBlurEffect.Style) -> UIVisualEffectView {

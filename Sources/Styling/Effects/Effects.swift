@@ -13,10 +13,21 @@ public struct Effects {
     public var cornerRadius: CGFloat?
     public var rounded: Bool?
     
-    public init(shadow: Shadow? = nil, blur: Blur? = nil, cornerRadius: CGFloat? = nil, rounded: Bool? = nil) {
+    public var hapticFeedback: UIImpactFeedbackGenerator.FeedbackStyle?
+    public var transformEffect: CGAffineTransform?
+    
+    public init(shadow: Shadow? = nil,
+                blur: Blur? = nil,
+                cornerRadius: CGFloat? = nil,
+                rounded: Bool? = nil,
+                hapticFeedback: UIImpactFeedbackGenerator.FeedbackStyle? = nil,
+                transformEffect: CGAffineTransform? = nil
+    ) {
         self.shadow = shadow
         self.blur = blur
         self.cornerRadius = cornerRadius
         self.rounded = rounded
+        self.hapticFeedback = hapticFeedback
+        self.transformEffect = transformEffect
     }
 }

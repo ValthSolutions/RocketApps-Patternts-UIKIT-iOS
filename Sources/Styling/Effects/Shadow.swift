@@ -20,3 +20,17 @@ public struct Shadow {
         self.opacity = opacity
     }
 }
+
+public extension Shadow {
+    static var light: Shadow {
+        return Shadow(color: .black, offset: CGSize(width: 0, height: 2), radius: 6, opacity: 0.03)
+    }
+    
+    static var medium: Shadow {
+        return Shadow(color: .black, offset: CGSize(width: 0, height: 5), radius: 6, opacity: 0.06)
+    }
+    
+    static var heavy: Shadow {
+        return Shadow(color: .black, offset: CGSize(width: 0, height: 5), radius: 6, opacity: 0.12)
+    }
+}
