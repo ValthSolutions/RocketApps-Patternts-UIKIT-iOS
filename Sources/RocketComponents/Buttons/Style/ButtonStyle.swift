@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Styling
 /// Represents the visual and layout attributes for customizing a button's appearance.
 ///
 /// The `ButtonStyle` structure provides a way to specify various visual aspects
@@ -33,6 +33,8 @@ public struct ButtonStyle {
     /// If not provided, default spacing is applied.
     var spacing: Spacing?
     
+    var textColor: ColorScheme?
+    
     /// Initializes a new `ButtonStyle` with the specified attributes.
     ///
     /// - Parameters:
@@ -45,8 +47,11 @@ public struct ButtonStyle {
                 fontProfile: FontProfile? = nil,
                 icon: UIImage? = nil,
                 effect: Effects? = nil,
-                spacing: Spacing? = nil) {
+                spacing: Spacing? = nil,
+                textColor: ColorScheme? = ColorScheme(light: .black, dark: .white)
+    ) {
         self.type = type
+        self.textColor = textColor
         self.fontProfile = fontProfile
         self.icon = icon
         self.effect = effect

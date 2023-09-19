@@ -8,5 +8,5 @@
 import UIKit
 
 public struct Blur {
-    var style: UIBlurEffect.Style
+    public var style: UIBlurEffect.Style
 }

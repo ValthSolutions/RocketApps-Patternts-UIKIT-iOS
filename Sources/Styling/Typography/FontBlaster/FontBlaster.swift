@@ -3,7 +3,7 @@ import CoreText
 import Foundation
 import OSLog
 
-final public class FontInjector {
+final public class FontBlaster {
     fileprivate enum SupportedFontExtensions: String {
         case TrueTypeFont = ".ttf"
         case OpenTypeFont = ".otf"
@@ -37,7 +37,7 @@ final public class FontInjector {
 
 // MARK: - Helpers (Font Loading)
 
-private extension FontInjector {
+private extension FontBlaster {
     /// Loads all fonts found in a bundle.
     ///
     /// - Parameter path: The absolute path to the bundle.
@@ -113,7 +113,7 @@ private extension FontInjector {
     }
 }
 
-private extension FontInjector {
+private extension FontBlaster {
     /// Parses all of the fonts into their name and extension components.
     ///
     /// - Parameters:
@@ -127,7 +127,7 @@ private extension FontInjector {
         for fileName in contents {
             var parsedFont: (FontName, FontExtension)?
             
-            if fileName.contains(SupportedFontExtensions.TrueTypeFont.rawValue) || fileName.contains(FontInjector.SupportedFontExtensions.OpenTypeFont.rawValue) {
+            if fileName.contains(SupportedFontExtensions.TrueTypeFont.rawValue) || fileName.contains(FontBlaster.SupportedFontExtensions.OpenTypeFont.rawValue) {
                 parsedFont = font(fromName: fileName)
             }
             

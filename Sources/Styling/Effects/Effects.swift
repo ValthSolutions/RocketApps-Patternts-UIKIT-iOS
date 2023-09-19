@@ -8,10 +8,10 @@
 import UIKit
 
 public struct Effects {
-    var shadow: Shadow?
-    var blur: Blur?
-    var cornerRadius: CGFloat?
-    var rounded: Bool?
+    public var shadow: Shadow?
+    public var blur: Blur?
+    public var cornerRadius: CGFloat?
+    public var rounded: Bool?
     
     public init(shadow: Shadow? = nil, blur: Blur? = nil, cornerRadius: CGFloat? = nil, rounded: Bool? = nil) {
         self.shadow = shadow

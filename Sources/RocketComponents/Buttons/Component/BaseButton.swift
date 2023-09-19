@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class BaseButton: UIButton, Decoratable {
+public class BaseButton: UIButton, Decoratable, Iconable {
 
     public typealias Style = ButtonStyle
     
@@ -33,8 +33,15 @@ public class BaseButton: UIButton, Decoratable {
     public func decorate(with style: Style) {
         configureStyle(type: style.type)
         configureTypography(with: style.fontProfile)
-        configureIconAndText(with: style.icon, fontProfile: style.fontProfile, spacing: style.spacing)
+        configureIconAndText(with: style.icon,
+                             fontProfile: style.fontProfile,
+                             spacing: style.spacing,
+                             textColor: style.textColor)
         applyEffects(style.effect)
+        if let blurStyle = style.effect?.blur?.style {
+            self.addBlur(effectStyle: blurStyle)
+        }
+
         self.currentEffect = style.effect
         self.clipsToBounds = true
     }
@@ -106,13 +113,19 @@ public class BaseButton: UIButton, Decoratable {
     
     private func configureIconAndText(with icon: UIImage?,
                                       fontProfile: FontProfile?,
-                                      spacing: Spacing?) {
+                                      spacing: Spacing?,
+                                      textColor: ColorScheme?
+    ) {
         guard let icon = icon, stackView == nil else { return }
         let iconIV = UIImageView(image: icon)
         let label = UILabel()
         label.text = self.titleLabel?.text
         label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily, style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
-        
+                
+        if let textColor = textColor {
+            label.textColor = textColor.color
+        }
+
         let hStack = UIStackView(arrangedSubviews: [iconIV, label])
         hStack.spacing = spacing?.rawValue ?? Spacing.step3.rawValue
         hStack.alignment = .center

@@ -8,15 +8,15 @@
 import UIKit
 
 public struct ColorScheme: Equatable {
-    var light: UIColor
-    var dark: UIColor
+    public var light: UIColor
+    public var dark: UIColor
     
     public init(light: UIColor = .black, dark: UIColor = .white) {
         self.light = light
         self.dark = dark
     }
     
-    var color: UIColor {
+    public var color: UIColor {
         return UIColor { traitCollection in
             switch traitCollection.userInterfaceStyle {
             case .dark:

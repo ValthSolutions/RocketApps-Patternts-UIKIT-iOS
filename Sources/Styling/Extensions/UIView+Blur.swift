@@ -7,28 +7,15 @@
 
 import UIKit
 
-public class BaseBlurredView: UIView {
+public extension UIView {
     
-    private let blurEffectView: UIVisualEffectView
-    
-    public init(effect: UIBlurEffect.Style = .light) {
-        blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: effect))
-        super.init(frame: .zero)
+    @discardableResult
+    func addBlur(effectStyle: UIBlurEffect.Style) -> UIVisualEffectView {
+        let blurEffect = UIBlurEffect(style: effectStyle)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
         
-        setup()
-    }
-    
-    public func setOpacity(_ opacity: CGFloat) {
-        self.alpha = opacity
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setup() {
-        addSubview(blurEffectView)
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(blurEffectView)
         
         NSLayoutConstraint.activate([
             blurEffectView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -36,5 +23,7 @@ public class BaseBlurredView: UIView {
             blurEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             blurEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
+        
+        return blurEffectView
     }
 }

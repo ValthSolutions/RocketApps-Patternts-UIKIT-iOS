@@ -1,8 +1,8 @@
 import UIKit
 
 public struct FontProfile {
-    let fontFamily: String
-    let style: Typography.Style
+    public let fontFamily: String
+    public let style: Typography.Style
     
     public init(fontFamily: String = Typography.defaultFontFamily, style: Typography.Style) {
         self.fontFamily = fontFamily
@@ -14,7 +14,7 @@ public struct Typography {
     
     public static var defaultFontFamily = "HelveticaNeue"
     
-    static func font(for profile: FontProfile) -> UIFont {
+    public static func font(for profile: FontProfile) -> UIFont {
         let attributes = profile.style.attributes
         if let customFont = UIFont(name: profile.fontFamily, size: attributes.fontSize) {
             return customFont
@@ -23,7 +23,7 @@ public struct Typography {
         }
     }
     
-    static func attributedString(for profile: FontProfile, text: String) -> NSAttributedString {
+    public static func attributedString(for profile: FontProfile, text: String) -> NSAttributedString {
         let attributes = profile.style.attributes
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = attributes.lineHeight / attributes.fontSize

@@ -8,10 +8,10 @@
 import UIKit
 
 public struct Shadow {
-    var color: UIColor
-    var offset: CGSize
-    var radius: CGFloat
-    var opacity: Float
+    public var color: UIColor
+    public var offset: CGSize
+    public var radius: CGFloat
+    public var opacity: Float
     
     public init(color: UIColor, offset: CGSize, radius: CGFloat, opacity: Float) {
         self.color = color

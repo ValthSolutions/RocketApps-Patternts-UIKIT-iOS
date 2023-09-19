@@ -19,7 +19,7 @@ public enum ButtonStyleType: Equatable {
                    iconTintColor: ColorScheme? = nil)
 }
 
-extension ButtonStyleType {
+public extension ButtonStyleType {
     var resolvedPressedColor: ColorScheme {
         switch self {
         case .primary(let defaultColor, let pressedColor, _, _):
