@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class BaseButton: UIButton, Decoratable, Iconable {
+public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
 
     public typealias Style = ButtonStyle
     

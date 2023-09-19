@@ -7,9 +7,9 @@
 
 import UIKit
 
-public class BaseLabel: UILabel, Decoratable, Colorable {
+public class BaseTextView: UITextView, Decoratable {
     
-    public typealias Style = LabelStyle
+    public typealias Style = TextViewStyle
     
     public func decorate(with style: Style) {
         

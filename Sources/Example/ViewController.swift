@@ -1,20 +1,70 @@
+//
+//  ViewController.swift
+//  Texs
+//
+//  Created by LEMIN DAHOVICH on 19.09.2023.
+//
 
 import UIKit
-import Styling
+import RocketComponents
 
 class ViewController: UIViewController {
     
     let testButton = BaseButton(type: .system)
     let imageView = UIImageView()
+    let baseLabel = BaseLabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageView_With_Blur()
+        setupLabel()
+        setupPageControl()
     }
 }
 
 // MARK: BLUR
 extension ViewController {
+    
+    private func setupPageControl() {
+        view.addSubview(pageControl)
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        
+        pageControl.numberOfPages = 5
+        pageControl.currentPage = 2
+        
+        pageControl.decorate(with: Skeleton.PageControlStyles.defaultStyle)
+        NSLayoutConstraint.activate([
+            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageControl.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
+    private func setupPageControl() {
+        view.addSubview(pageControl)
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        
+        pageControl.numberOfPages = 5
+        pageControl.currentPage = 2
+        
+        pageControl.decorate(with: Skeleton.PageControlStyles.defaultStyle)
+        NSLayoutConstraint.activate([
+            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageControl.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
+    private func setupLabel() {
+        view.addSubview(baseLabel)
+        baseLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            baseLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            baseLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        baseLabel.decorate(with: Skeleton.LabelStyles.title)
+    }
+    
     private func setupImageView_With_Blur() {
         imageView.image = UIImage(named: "unsplash")
         imageView.contentMode = .scaleAspectFill
@@ -46,42 +96,15 @@ extension ViewController {
     private func setup1stButton() {
         setupConstraints()
         testButton.setTitle("Test Button", for: .normal)
-        
-        let buttonStyle = ButtonStyle(
-            type: .primary(
-                defaultColor: ColorScheme(light: .darkGray, dark: .lightGray),
-                pressedColor: ColorScheme(light: .red, dark: .yellow),
-                disabledColor: ColorScheme(light: .lightGray, dark: .darkGray)
-            ),
-            fontProfile: FontProfile(style: .title3Bold),
-            icon: nil,
-            effect:
-                Effects(shadow: Shadow(color: .black,
-                                       offset: CGSize(width: 0, height: 2),
-                                       radius: 4, opacity: 0.2), cornerRadius: 8),
-            spacing: .step5
-        )
-        
-        testButton.decorate(with: buttonStyle)
+
+        testButton.decorate(with: Skeleton.ButtonStyles.primary)
     }
     
     private func setup2ndButton() {
         setupConstraints()
         testButton.setTitle("Test Button", for: .normal)
         
-        let buttonStyle = ButtonStyle(
-            type: .secondary(borderWidth: 4,
-                             defaultBorderColor: ColorScheme(light: .darkGray, dark: .lightGray),
-                             pressedBorderColor: ColorScheme(light: .red, dark: .yellow),
-                             disabledBorderColor: ColorScheme(light: .lightGray, dark: .darkGray)
-                            ),
-            fontProfile: FontProfile(style: .largeTitle),
-            icon: nil,
-            effect:
-                Effects(cornerRadius: 8)
-        )
-        
-        testButton.decorate(with: buttonStyle)
+        testButton.decorate(with: Skeleton.ButtonStyles.secondary)
     }
     
     private func setupConstraints() {

@@ -56,4 +56,25 @@ class Skeleton {
             )
         }
     }
+    
+    // MARK: - PageControl Styles
+    struct PageControlStyles {
+        static var defaultStyle: PageControlStyle {
+            return PageControlStyle(
+                currentPageIndicatorTintColor: ColorScheme(light: .blue, dark: .cyan),
+                pageIndicatorTintColor: ColorScheme(light: .gray, dark: .darkGray)
+            )
+        }
+    }
+    
+    // MARK: - TextView Styles
+    struct TextViewStyles {
+        static var defaultStyle: TextViewStyle {
+            return TextViewStyle(fontProfile: FontProfile(style: .title3Bold),
+                                 backgroundColor: ColorScheme(light: .lightGray, dark: .black),
+                                 textColor: ColorScheme(light: .black, dark: .white),
+                                 spacing: Spacing.step4,
+                                 placeholderColor: ColorScheme(light: .gray, dark: .lightGray)))
+        }
+    }
 }
