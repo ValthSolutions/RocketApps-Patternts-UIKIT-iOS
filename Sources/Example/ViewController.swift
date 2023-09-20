@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSwitcher()
-        view.backgroundColor = .white
+        view.backgroundColor = .gray
     }
 }
 

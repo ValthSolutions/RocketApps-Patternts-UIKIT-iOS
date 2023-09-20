@@ -8,7 +8,7 @@
 import UIKit
 
 /// A style configuration to customize the appearance and behavior of a toggle control.
-open struct ToggleStyle {
+open class ToggleStyle {
     
     /// Indicates whether the toggle transition is animated.
     var animated: Bool?

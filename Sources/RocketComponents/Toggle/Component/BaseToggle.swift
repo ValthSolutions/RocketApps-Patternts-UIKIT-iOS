@@ -135,7 +135,7 @@ open class BaseToggle: UIControl, Decoratable {
         self.setupUI()
     }
     
-    public override open func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+    public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         super.beginTracking(touch, with: event)
         
         self.animate()
