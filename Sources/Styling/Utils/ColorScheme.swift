@@ -16,6 +16,7 @@ public struct ColorScheme: Equatable {
         self.dark = dark
     }
     
+    ///The color that mathed current user's interface mode Day/Night
     public var color: UIColor {
         return UIColor { traitCollection in
             switch traitCollection.userInterfaceStyle {
