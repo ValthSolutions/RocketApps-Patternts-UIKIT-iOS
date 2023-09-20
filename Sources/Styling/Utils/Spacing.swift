@@ -5,6 +5,8 @@ import Foundation
 /// This enum provides a set of predefined spacing increments,
 /// ensuring consistent gaps and padding across the application's UI.
 public enum Spacing: CGFloat {
+    /// Represents a spacing of 2 points.
+    case step0 = 2.0
     
     /// Represents a spacing of 4 points.
     case step1 = 4.0

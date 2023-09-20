@@ -8,27 +8,39 @@
 import UIKit
 import RocketComponents
 
-/*
- 4 colors for font
- */
-
 class ViewController: UIViewController {
     
     let testButton = BaseButton(type: .system)
     let imageView = UIImageView()
     let baseLabel = BaseLabel()
+    let pageControl = BasePageControl()
+    let textView = BaseTextView()
+    let switcher = BaseToggle()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupImageView_With_Blur()
-        setupLabel()
-        setupPageControl()
+        setupSwitcher()
+        view.backgroundColor = .white
     }
 }
 
-// MARK: BLUR
 extension ViewController {
+    // MARK: Toggle
+    private func setupSwitcher() {
+        view.addSubview(switcher)
+        switcher.translatesAutoresizingMaskIntoConstraints = false
+                
+        NSLayoutConstraint.activate([
+            switcher.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            switcher.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            switcher.widthAnchor.constraint(equalToConstant: 50),
+            switcher.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        switcher.decorate(with: .init())
+    }
     
+    // MARK: Page Control
     private func setupPageControl() {
         view.addSubview(pageControl)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -43,20 +55,8 @@ extension ViewController {
         ])
     }
     
-    private func setupPageControl() {
-        view.addSubview(pageControl)
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        
-        pageControl.numberOfPages = 5
-        pageControl.currentPage = 2
-        
-        pageControl.decorate(with: Skeleton.PageControlStyles.defaultStyle)
-        NSLayoutConstraint.activate([
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
-    
+    // MARK: Label
+
     private func setupLabel() {
         view.addSubview(baseLabel)
         baseLabel.translatesAutoresizingMaskIntoConstraints = false
