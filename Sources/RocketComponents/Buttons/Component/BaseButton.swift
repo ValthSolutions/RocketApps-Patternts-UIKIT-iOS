@@ -84,6 +84,12 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     public func setIconVisibility(_ isVisible: Bool) {
         self.iconImageView?.isHidden = !isVisible
     }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        applyRoundedEffect(rounded: currentEffect?.rounded,
+                           cornerRadius: currentEffect?.cornerRadius)
+    }
 }
 
 // MARK: - Effects Configuration
