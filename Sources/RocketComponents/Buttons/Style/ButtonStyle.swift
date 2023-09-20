@@ -11,7 +11,7 @@ import Styling
 ///
 /// The `ButtonStyle` structure provides a way to specify various visual aspects
 /// of a button, such as its type, font, icon, effects, and spacing between its elements.
-public struct ButtonStyle {
+open class ButtonStyle {
     
     /// Specifies the fundamental style of the button.
     /// This can determine attributes like background color, border, and highlight behavior.

@@ -7,11 +7,11 @@
 
 import UIKit
 
-public class BaseTextView: UITextView, Decoratable {
+open class BaseTextView: UITextView, Decoratable {
     
     public typealias Style = TextViewStyle
     
-    public func decorate(with style: Style) {
+    open func decorate(with style: Style) {
         
         configureTypography(with: style.fontProfile)
         
@@ -26,11 +26,11 @@ public class BaseTextView: UITextView, Decoratable {
         applyEffects(style.effect)
     }
     
-    public func applyBackgroundColor(_ color: Styling.ColorScheme) {
+    open func applyBackgroundColor(_ color: Styling.ColorScheme) {
         self.backgroundColor = color.color
     }
     
-    public func applyTintColor(_ color: Styling.ColorScheme) {
+    open func applyTintColor(_ color: Styling.ColorScheme) {
         self.textColor = color.color
     }
     

@@ -9,7 +9,7 @@ import UIKit
 import Styling
 
 /// A struct representing the styling attributes for a UILabel.
-public struct LabelStyle {
+open class LabelStyle {
     
     /// Font-related attributes for the label.
     /// Provides information about font family, style, and weight.

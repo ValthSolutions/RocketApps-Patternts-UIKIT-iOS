@@ -8,7 +8,7 @@
 import Styling
 
 /// A struct representing the styling attributes for a UITextView.
-public struct TextViewStyle {
+open struct TextViewStyle {
     
     /// The typography profile specifying the font attributes for the text view.
     /// Uses the `FontProfile` for defined font characteristics.

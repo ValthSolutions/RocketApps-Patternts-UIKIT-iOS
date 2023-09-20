@@ -8,7 +8,7 @@
 import Styling
 
 /// A struct representing the styling attributes for a UIPageControl.
-public struct PageControlStyle {
+open class PageControlStyle {
     
     /// The tint color to be used for the currently active page indicator.
     /// Utilizes the `ColorScheme` for light and dark mode adaptation.

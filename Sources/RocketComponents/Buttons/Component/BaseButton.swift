@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
+open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     
     public typealias Style = ButtonStyle
     
@@ -24,22 +24,22 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     
     // MARK: - Public
     
-    public override var isHighlighted: Bool {
+    open override var isHighlighted: Bool {
         didSet {
             updateState()
             handleTransformAndHaptic()
         }
     }
     
-    public override var isEnabled: Bool {
+    open override var isEnabled: Bool {
         didSet { updateState() }
     }
     
-    public override func setTitle(_ title: String?, for state: UIControl.State) {
+    open override func setTitle(_ title: String?, for state: UIControl.State) {
         self.title = title
     }
     
-    public func decorate(with style: Style) {
+    open func decorate(with style: Style) {
         configureStyle(type: style.type)
         configureTypography(with: style.fontProfile)
         configureIconAndText(with: style.icon,
@@ -59,15 +59,15 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
         self.clipsToBounds = true
     }
     
-    public func applyBackgroundColor(_ color: ColorScheme) {
+    open func applyBackgroundColor(_ color: ColorScheme) {
         self.backgroundColor = color.color
     }
     
-    public func applyTintColor(_ color: ColorScheme) {
+    open func applyTintColor(_ color: ColorScheme) {
         self.iconImageView?.tintColor = color.color
     }
     
-    public func setIcon(_ image: UIImage) {
+    open func setIcon(_ image: UIImage) {
         if self.iconImageView == nil {
             self.iconImageView = UIImageView()
             if let stackView = self.stackView {
@@ -77,15 +77,15 @@ public class BaseButton: UIButton, Decoratable, Iconable, Colorable {
         self.iconImageView?.image = image
     }
     
-    public func setIconTintColor(_ color: ColorScheme) {
+    open func setIconTintColor(_ color: ColorScheme) {
         self.iconImageView?.tintColor = color.color
     }
     
-    public func setIconVisibility(_ isVisible: Bool) {
+    open func setIconVisibility(_ isVisible: Bool) {
         self.iconImageView?.isHidden = !isVisible
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         applyRoundedEffect(rounded: currentEffect?.rounded,
                            cornerRadius: currentEffect?.cornerRadius)

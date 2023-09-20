@@ -8,7 +8,7 @@
 import UIKit
 import Styling
 
-public class BaseBlurredView: NiblessView {
+open class BaseBlurredView: NiblessView {
     
     private var blurEffectView: UIVisualEffectView!
     
@@ -17,7 +17,7 @@ public class BaseBlurredView: NiblessView {
         blurEffectView = self.addBlur(effectStyle: effect)
     }
     
-    public func setOpacity(_ opacity: CGFloat) {
+    open func setOpacity(_ opacity: CGFloat) {
         self.alpha = opacity
     }
 }

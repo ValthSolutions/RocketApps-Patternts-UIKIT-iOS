@@ -1,34 +1,34 @@
 import UIKit
 
-public class BaseToggle: UIControl, Decoratable {
+open class BaseToggle: UIControl, Decoratable {
     public typealias Style = ToggleStyle
 
-    public var feedbackGenerator: UIImpactFeedbackGenerator? = nil
+    open var feedbackGenerator: UIImpactFeedbackGenerator? = nil
     
-    public var isOn: Bool = true
-    public var animated: Bool = false
+    open var isOn: Bool = true
+    open var animated: Bool = false
 
-    public var animationDuration: Double = 0.0
+    open var animationDuration: Double = 0.0
     
-    public var spacing: CGFloat = 0 {
+    open var spacing: CGFloat = 0 {
         didSet {
             self.layoutSubviews()
         }
     }
     
-    public var onTintColor: UIColor = .white {
+    open var onTintColor: UIColor = .white {
         didSet {
             self.setupUI()
         }
     }
     
-    public var offTintColor: UIColor = .black {
+    open var offTintColor: UIColor = .black {
         didSet {
             self.setupUI()
         }
     }
     
-    public var cornerRadius: CGFloat {
+    open var cornerRadius: CGFloat {
         get {
             return self.privateCornerRadius
         }
@@ -48,13 +48,13 @@ public class BaseToggle: UIControl, Decoratable {
         }
     }
     
-    public var thumbTintColor: UIColor = UIColor.white {
+    open var thumbTintColor: UIColor = UIColor.white {
         didSet {
             self.thumbView.backgroundColor = self.thumbTintColor
         }
     }
     
-    public var thumbCornerRadius: CGFloat {
+    open var thumbCornerRadius: CGFloat {
         get {
             return self.privateThumbCornerRadius
         }
@@ -81,19 +81,19 @@ public class BaseToggle: UIControl, Decoratable {
         }
     }
     
-    public var thumbShadowColor: UIColor = UIColor.black {
+    open var thumbShadowColor: UIColor = UIColor.black {
         didSet {
             self.thumbView.layer.shadowColor = self.thumbShadowColor.cgColor
         }
     }
     
-    public var thumbShadowOffset: CGSize = .zero {
+    open var thumbShadowOffset: CGSize = .zero {
         didSet {
             self.thumbView.layer.shadowOffset = self.thumbShadowOffset
         }
     }
     
-    public var thumbShaddowRadius: CGFloat = 0 {
+    open var thumbShaddowRadius: CGFloat = 0 {
         didSet {
             self.thumbView.layer.shadowRadius = self.thumbShaddowRadius
         }
@@ -107,21 +107,21 @@ public class BaseToggle: UIControl, Decoratable {
     
     // Labels
     
-    public var labelOff:UILabel = UILabel()
-    public var labelOn:UILabel = UILabel()
+    open var labelOff:UILabel = UILabel()
+    open var labelOn:UILabel = UILabel()
     
-    public var areLabelsShown: Bool = false {
+    open var areLabelsShown: Bool = false {
         didSet {
             self.setupUI()
         }
     }
     
-    public var thumbView = ThumbView(frame: CGRect.zero)
-    public var onImageView = UIImageView(frame: CGRect.zero)
-    public var offImageView = UIImageView(frame: CGRect.zero)
-    public var onPoint = CGPoint.zero
-    public var offPoint = CGPoint.zero
-    public var isAnimating = false
+    open var thumbView = ThumbView(frame: CGRect.zero)
+    open var onImageView = UIImageView(frame: CGRect.zero)
+    open var offImageView = UIImageView(frame: CGRect.zero)
+    open var onPoint = CGPoint.zero
+    open var offPoint = CGPoint.zero
+    open var isAnimating = false
     
     private var style: Style?
     
@@ -130,19 +130,19 @@ public class BaseToggle: UIControl, Decoratable {
         self.setupUI()
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
     }
     
-    override open func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+    public override open func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         super.beginTracking(touch, with: event)
         
         self.animate()
         return true
     }
     
-    public func decorate(with style: Style) {
+    open func decorate(with style: Style) {
         self.style = style
         if let animated = style.animated {
             self.animated = animated
@@ -210,7 +210,7 @@ public class BaseToggle: UIControl, Decoratable {
         }
     }
     
-    public func setOn(on: Bool, animated: Bool) {
+    open func setOn(on: Bool, animated: Bool) {
         if animated && self.animated {
             self.animate(on: on)
         } else {

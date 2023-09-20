@@ -1,10 +1,10 @@
 import UIKit
 
-public final class ThumbView: NiblessView {
+open class ThumbView: NiblessView {
     
     fileprivate(set) var thumbImageView = UIImageView(frame: CGRect.zero)
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.thumbImageView)
     }

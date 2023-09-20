@@ -7,11 +7,11 @@
 
 import UIKit
 
-public class BasePageControl: UIPageControl, Decoratable {
+open class BasePageControl: UIPageControl, Decoratable {
     
     public typealias Style = PageControlStyle
     
-    public func decorate(with style: Style) {
+    open func decorate(with style: Style) {
         if let currentPageIndicatorTintColor = style.currentPageIndicatorTintColor {
             self.currentPageIndicatorTintColor = currentPageIndicatorTintColor.color
         }
