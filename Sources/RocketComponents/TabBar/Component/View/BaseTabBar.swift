@@ -12,11 +12,20 @@ extension CGFloat {
     var radiansToDegrees: CGFloat { return self * 180 / .pi }
 }
 
-open class BaseTabBar: UITabBar {
+/// `BaseTabBar` is a custom tab bar that provides a circular center button.
+/// This class provides methods for setting up and updating the state of the center button.
+open class BaseTabBar: UITabBar, Decoratable {
     
+    public typealias Style = TabBarStyle
+    
+    /// The layer that holds the shape around the center button.
     private var shapeLayer: CALayer?
-    public var centerTabIndex: Int = 0
-
+    
+    /// The index for the center tab. By default, it is set to 0.
+    open var centerTabIndex: Int = 0
+    
+    
+    /// Center button that is displayed prominently on the tab bar.
     private var centerButton: UIButton? {
         didSet {
             updateCenterButtonState()
@@ -37,7 +46,21 @@ open class BaseTabBar: UITabBar {
             updateCenterButtonState()
         }
     }
-    
+        
+    open func decorate(with style: TabBarStyle) {
+        if let unselectedTintColor = style.unselectedItemTintColor {
+            self.unselectedItemTintColor = unselectedTintColor.color
+        }
+        
+        if let tintColor = style.tintColor {
+            self.tintColor = tintColor.color
+        }
+        
+        if let centerIcon = style.centerIcon {
+            centerButton?.setImage(centerIcon, for: .normal)
+            centerButton?.setImage(centerIcon, for: .highlighted)
+        }
+    }
     // MARK: - Init
     
     private func setupInitialState() {
@@ -45,6 +68,13 @@ open class BaseTabBar: UITabBar {
     }
     
     // MARK: - Center Button Methods
+    
+    /// Updates the appearance of the center button based on whether it is the selected tab.
+    open func updateCenterButtonState() {
+        if let tabBarVC = findTabBarController() {
+            centerButton?.tintColor = (tabBarVC.selectedIndex == centerTabIndex) ? self.tintColor : tabBarVC.tabBar.unselectedItemTintColor
+        }
+    }
     
     private func setupCenterButton() {
         let button = UIButton(type: .custom)
@@ -64,14 +94,13 @@ open class BaseTabBar: UITabBar {
             updateCenterButtonState()
         }
     }
-
-    func updateCenterButtonState() {
-        if let tabBarVC = findTabBarController() {
-            centerButton?.tintColor = (tabBarVC.selectedIndex == centerTabIndex) ? self.tintColor : tabBarVC.tabBar.unselectedItemTintColor
-        }
-    }
     
     // MARK: - Shape Methods
+    
+    open override func draw(_ rect: CGRect) {
+        addShape()
+        setupCenterButton()
+    }
     
     private func addShape() {
         let shapeLayer = CAShapeLayer()
@@ -87,11 +116,6 @@ open class BaseTabBar: UITabBar {
         }
         
         self.shapeLayer = shapeLayer
-    }
-    
-    open override func draw(_ rect: CGRect) {
-        addShape()
-        setupCenterButton()
     }
     
     private func createPathCircle() -> CGPath {
@@ -112,7 +136,7 @@ open class BaseTabBar: UITabBar {
     }
     
     // MARK: - Helper Methods
-
+    
     private func findTabBarController() -> UITabBarController? {
         var nextResponder = self.next
         while nextResponder != nil {
@@ -126,34 +150,15 @@ open class BaseTabBar: UITabBar {
     
     // MARK: - Touch Handling
     
-    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let centerButton = self.centerButton, centerButton.frame.contains(point) {
-            return centerButton
-        }
-        return super.hitTest(point, with: event)
-    }
+//    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        if let centerButton = self.centerButton, centerButton.frame.contains(point) {
+//            return centerButton
+//        }
+//        return super.hitTest(point, with: event)
+//    }
     
     open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let buttonRadius: CGFloat = 35
         return abs(self.center.x - point.x) > buttonRadius || abs(point.y) > buttonRadius
-    }
-}
-
-extension BaseTabBar: Decoratable {
-    public typealias Style = TabBarStyle
-    
-    public func decorate(with style: TabBarStyle) {
-        if let unselectedTintColor = style.unselectedItemTintColor {
-            self.unselectedItemTintColor = unselectedTintColor.color
-        }
-        
-        if let tintColor = style.tintColor {
-            self.tintColor = tintColor.color
-        }
-        
-        if let centerIcon = style.centerIcon {
-            centerButton?.setImage(centerIcon, for: .normal)
-            centerButton?.setImage(centerIcon, for: .highlighted)
-        }
     }
 }

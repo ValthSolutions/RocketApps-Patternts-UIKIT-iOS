@@ -14,9 +14,9 @@ public struct TabBarStyle {
     var tintColor: ColorScheme?
     var centerIcon: UIImage?
     
-    public init(unselectedItemTintColor: ColorScheme?,
-                tintColor: ColorScheme?,
-                centerIcon: UIImage?) {
+    public init(unselectedItemTintColor: ColorScheme? = nil,
+                tintColor: ColorScheme? = nil,
+                centerIcon: UIImage? = nil) {
         self.unselectedItemTintColor = unselectedItemTintColor
         self.tintColor = tintColor
         self.centerIcon = centerIcon
