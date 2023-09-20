@@ -14,9 +14,9 @@ extension CGFloat {
 
 /// `BaseTabBar` is a custom tab bar that provides a circular center button.
 /// This class provides methods for setting up and updating the state of the center button.
-open class BaseTabBar: UITabBar, Decoratable {
+open class BaseCenteredTabBar: UITabBar, Decoratable {
     
-    public typealias Style = TabBarStyle
+    public typealias Style = CenteredTabBarStyle
     
     /// The layer that holds the shape around the center button.
     private var shapeLayer: CALayer?
@@ -47,7 +47,7 @@ open class BaseTabBar: UITabBar, Decoratable {
         }
     }
         
-    open func decorate(with style: TabBarStyle) {
+    open func decorate(with style: CenteredTabBarStyle) {
         if let unselectedTintColor = style.unselectedItemTintColor {
             self.unselectedItemTintColor = unselectedTintColor.color
         }
@@ -150,12 +150,12 @@ open class BaseTabBar: UITabBar, Decoratable {
     
     // MARK: - Touch Handling
     
-//    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-//        if let centerButton = self.centerButton, centerButton.frame.contains(point) {
-//            return centerButton
-//        }
-//        return super.hitTest(point, with: event)
-//    }
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if let centerButton = self.centerButton, centerButton.frame.contains(point) {
+            return centerButton
+        }
+        return super.hitTest(point, with: event)
+    }
     
     open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let buttonRadius: CGFloat = 35

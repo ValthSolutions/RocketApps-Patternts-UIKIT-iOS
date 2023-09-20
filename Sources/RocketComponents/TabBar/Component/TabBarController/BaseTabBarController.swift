@@ -22,16 +22,16 @@ open class BaseTabBarController: UITabBarController,
     }
     
     /// Represents the custom tab bar, which includes the center button.
-    private var customTabBar: BaseTabBar?
+    private var customTabBar: BaseCenteredTabBar?
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self.customTabBar = BaseTabBar(frame: self.tabBar.frame)
+        self.customTabBar = BaseCenteredTabBar(frame: self.tabBar.frame)
         self.delegate = self
         self.setValue(customTabBar, forKey: "tabBar")
     }
     
-    open func decorateTabBar(with style: TabBarStyle) {     customTabBar?.decorate(with: style)
+    open func decorateTabBar(with style: CenteredTabBarStyle) {     customTabBar?.decorate(with: style)
     }
     
     /// Updates the state of the center button when a tab bar item is selected.

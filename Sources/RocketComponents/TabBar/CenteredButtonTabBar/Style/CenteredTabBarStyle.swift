@@ -8,7 +8,7 @@
 import Styling
 import UIKit
 
-public struct TabBarStyle {
+public struct CenteredTabBarStyle {
     
     var unselectedItemTintColor: ColorScheme?
     var tintColor: ColorScheme?
