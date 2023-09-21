@@ -107,8 +107,8 @@ open class BaseToggle: UIControl, Decoratable {
     
     // Labels
     
-    open var labelOff:UILabel = UILabel()
-    open var labelOn:UILabel = UILabel()
+    open var labelOff: UILabel = UILabel()
+    open var labelOn: UILabel = UILabel()
     
     open var areLabelsShown: Bool = false {
         didSet {
@@ -117,8 +117,6 @@ open class BaseToggle: UIControl, Decoratable {
     }
     
     open var thumbView = ThumbView(frame: CGRect.zero)
-    open var onImageView = UIImageView(frame: CGRect.zero)
-    open var offImageView = UIImageView(frame: CGRect.zero)
     open var onPoint = CGPoint.zero
     open var offPoint = CGPoint.zero
     open var isAnimating = false
@@ -248,21 +246,6 @@ extension BaseToggle {
                 self.labelOn.frame = CGRect(x: 0, y: 0, width: labelWidth, height: self.frame.height)
                 self.labelOff.frame = CGRect(x: self.frame.width - labelWidth, y: 0, width: labelWidth, height: self.frame.height)
             }
-            
-            let frameSize = thumbSize.width > thumbSize.height ? thumbSize.height * 0.7 : thumbSize.width * 0.7
-            
-            let onOffImageSize = CGSize(width: frameSize, height: frameSize)
-            
-            
-            self.onImageView.frame.size = onOffImageSize
-            self.offImageView.frame.size = onOffImageSize
-            
-            self.onImageView.center = CGPoint(x: self.onPoint.x + self.thumbView.frame.size.width / 2, y: self.thumbView.center.y)
-            self.offImageView.center = CGPoint(x: self.offPoint.x + self.thumbView.frame.size.width / 2, y: self.thumbView.center.y)
-            
-            
-            self.onImageView.alpha = self.isOn ? 1.0 : 0.0
-            self.offImageView.alpha = self.isOn ? 0.0 : 1.0
         }
     }
 }
@@ -286,8 +269,6 @@ extension BaseToggle {
         self.backgroundColor = self.isOn ? self.onTintColor : self.offTintColor
         
         self.addSubview(self.thumbView)
-        self.addSubview(self.onImageView)
-        self.addSubview(self.offImageView)
         
         self.setupLabels()
     }

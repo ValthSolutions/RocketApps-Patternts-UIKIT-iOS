@@ -7,7 +7,9 @@
 
 import UIKit
 
-open class BaseLabel: UILabel, Decoratable, Colorable {
+open class BaseLabel: UILabel,
+                      Decoratable,
+                      Colorable {
     
     public typealias Style = LabelStyle
     

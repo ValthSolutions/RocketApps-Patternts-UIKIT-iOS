@@ -6,7 +6,6 @@
 //
 
 import UIKit
-#warning("TODO - default colors can be moved to global Constants for reusing in several places")
 /// A style configuration to customize the appearance and behavior of a toggle control.
 open class ToggleStyle {
     
@@ -57,11 +56,9 @@ open class ToggleStyle {
         animated: Bool? = true,
         animationDuration: Double? = 0.5,
         spacing: Spacing? = Spacing.step0,
-        onTintColor: ColorScheme? = ColorScheme(light: UIColor(red: 0.07, green: 0.72, blue: 0.42, alpha: 1),
-                                                dark: UIColor(red: 0.07, green: 0.72, blue: 0.42, alpha: 1)),
-        offTintColor: ColorScheme? = ColorScheme(light: UIColor(red: 0.8, green: 0.81, blue: 0.82, alpha: 1),
-                                                 dark: UIColor(red: 0.8, green: 0.81, blue: 0.82, alpha: 1)),
-        thumbTintColor: ColorScheme? = ColorScheme(light: .white, dark: .white),
+        onTintColor: ColorScheme? = ColorConstants.defaultOnTintColor,
+        offTintColor: ColorScheme? = ColorConstants.defaultOffTintColor,
+        thumbTintColor: ColorScheme? = ColorConstants.defaultThumbTintColor,
         thumbSize: CGSize? = .zero,
         thumbEffects: Effects? = Effects(hapticFeedback: .heavy),
         labelOnStyle: LabelStyle? = nil,

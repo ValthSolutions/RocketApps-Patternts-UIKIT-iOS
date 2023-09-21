@@ -7,7 +7,8 @@
 
 import UIKit
 
-open class BaseTextView: UITextView, Decoratable {
+open class BaseTextView: UITextView,
+                         Decoratable {
     
     public typealias Style = TextViewStyle
     

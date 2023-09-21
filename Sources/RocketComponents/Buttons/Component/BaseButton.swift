@@ -1,7 +1,11 @@
 import UIKit
-    
-#warning("TODO - for button I would say it's better to have substiles, because pontenyially not only borderColor can change, so you can have map [UIButton.State: ButtonStyle] and apply style on state change")
-open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
+
+//#warning("TODO - for button I would say it's better to have substiles, because pontenyially not only borderColor can change, so you can have map [UIButton.State: ButtonStyle] and apply style on state change")
+open class BaseButton: UIButton,
+                       Decoratable,
+                       Iconable,
+                       Colorable,
+                       TypographyButtonApplicable {
     
     public typealias Style = ButtonStyle
     
@@ -15,6 +19,7 @@ open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     private var currentEffect: Effects?
     private var originalTransform: CGAffineTransform?
     private var title: String?
+    private var styles: [Int: ButtonStyle] = [:]
     
     // MARK: - Public
     
@@ -31,6 +36,14 @@ open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     
     open override func setTitle(_ title: String?, for state: UIControl.State) {
         self.title = title
+    }
+    
+    open func setStyle(_ style: Style, for state: UIButton.State) {
+        styles[Int(state.rawValue)] = style
+        
+        if self.state == state {
+            applyStyle(style)
+        }
     }
     
     open func decorate(with style: Style) {
@@ -51,6 +64,16 @@ open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
         }
         self.currentEffect = style.effect
         self.clipsToBounds = true
+    }
+    
+    open func applyStyle(_ style: Style) {
+        decorate(with: style)
+        switch style.type {
+        case .primary(let defaultColor, _, _, _):
+            setupPrimaryStyle(withDefaultColor: defaultColor, type: style.type)
+        case .secondary(let borderWidth, let defaultColor, _, _, _):
+            setupSecondaryStyle(borderWidth: borderWidth, defaultColor: defaultColor, type: style.type)
+        }
     }
     
     open func applyBackgroundColor(_ color: ColorScheme) {
@@ -155,7 +178,7 @@ private extension BaseButton {
 // MARK: - Icon and Text Layout
 
 private extension BaseButton {
-
+    
     func configureIconAndText(with icon: UIImage?,
                               fontProfile: FontProfile?,
                               spacing: Spacing?,
@@ -215,7 +238,7 @@ private extension BaseButton {
         
         if iconPosition == .left {
             arrangedSubviews = [iconIV, label]
-        } else {
+        } else if iconPosition == .right {
             arrangedSubviews = [label, iconIV]
         }
         
@@ -237,11 +260,14 @@ private extension BaseButton {
     }
     
     func updateState() {
-        if case .secondary = currentStyleType {
-            let borderColor: UIColor? = !isEnabled ? disabledBorderColor?.color : (isHighlighted ? pressedBorderColor?.color : defaultBorderColor?.color)
-            layer.borderColor = borderColor?.cgColor
+        if let style = styles[Int(self.state.rawValue)] {
+            applyStyle(style)
+            if case .secondary = currentStyleType {
+                let borderColor: UIColor? = !isEnabled ? disabledBorderColor?.color : (isHighlighted ? pressedBorderColor?.color : defaultBorderColor?.color)
+                layer.borderColor = borderColor?.cgColor
+            }
+            applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
         }
-        applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
     }
 }
 

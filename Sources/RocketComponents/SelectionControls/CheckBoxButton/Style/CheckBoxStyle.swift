@@ -1,9 +1,15 @@
-import UIKit
-import Styling
+//
+//  File.swift
+//  
+//
+//  Created by LEMIN DAHOVICH on 21.09.2023.
+//
 
-/// `RadioButtonStyle` defines the appearance of a radio button.
+import Foundation
+
+/// `CheckBoxStyle` defines the appearance of a radio button.
 /// It encompasses attributes like effects, colors for different states, and proportion for sizing.
-open class RadioButtonStyle {
+open class CheckBoxStyle {
     
     /// Affects the overall appearance such as shadows. Can be `nil` if no effects are desired.
     var effect: Effects?
@@ -18,7 +24,7 @@ open class RadioButtonStyle {
     /// If `nil`, a default value is used.
     var proportion: CGFloat?
     
-    /// Initializes a new instance of `RadioButtonStyle`.
+    /// Initializes a new instance of `CheckBoxStyle`.
     ///
     /// - Parameters:
     ///   - selectedColor: Color scheme to use when the button is selected. Default is `.cyan`.
@@ -29,7 +35,7 @@ open class RadioButtonStyle {
         selectedColor: ColorScheme? = ColorConstants.defaultSelectedColor,
         unselectedColor: ColorScheme? = ColorConstants.defaultUnselectedColor,
         proportion: CGFloat? = nil,
-        effect: Effects? = nil
+        effect: Effects? = Effects(cornerRadius: 4)
     ) {
         self.unselectedColor = unselectedColor
         self.selectedColor = selectedColor

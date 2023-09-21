@@ -4,10 +4,18 @@ public struct FontProfile {
     public let fontFamily: String
     public let style: Typography.Style
     
-    public init(fontFamily: String = Typography.defaultFontFamily, style: Typography.Style) {
+    public init(fontFamily: String = Typography.defaultFontFamily,
+                style: Typography.Style) {
         self.fontFamily = fontFamily
         self.style = style
     }
+}
+
+public struct TypographyAttributes {
+    var fontSize: CGFloat
+    var fontWeight: UIFont.Weight
+    var lineHeight: CGFloat
+    var letterSpacing: CGFloat
 }
 
 public struct Typography {
@@ -78,38 +86,42 @@ extension Typography {
         case caption1Semibold
         /// Font Size: 10px
         case caption3Regular
+        /// Custom TypographyAttributes
+        case custom(TypographyAttributes)
         
-        #warning("TODO, probably add custom as well for flexibility AND attributes should be wrapped in some structure, not cartage")
-        var attributes: (fontSize: CGFloat, fontWeight: UIFont.Weight, lineHeight: CGFloat, letterSpacing: CGFloat) {
+        
+        var attributes: TypographyAttributes {
             switch self {
             case .largeTitle:
-                return (34, .bold, 41, -0.4)
+                return TypographyAttributes(fontSize: 34, fontWeight: .bold, lineHeight: 41, letterSpacing: -0.4)
             case .title1Bold:
-                return (28, .bold, 34, -0.4)
+                return TypographyAttributes(fontSize: 28, fontWeight: .bold, lineHeight: 34, letterSpacing: -0.4)
             case .title2Bold:
-                return (22, .bold, 28, -0.4)
+                return TypographyAttributes(fontSize: 22, fontWeight: .bold, lineHeight: 28, letterSpacing: -0.4)
             case .title3Bold:
-                return (20, .bold, 25, -0.4)
+                return TypographyAttributes(fontSize: 20, fontWeight: .bold, lineHeight: 25, letterSpacing: -0.4)
             case .title3Semibold:
-                return (20, .semibold, 25, -0.4)
+                return TypographyAttributes(fontSize: 20, fontWeight: .semibold, lineHeight: 25, letterSpacing: -0.4)
             case .title3Regular:
-                return (20, .regular, 25, -0.4)
+                return TypographyAttributes(fontSize: 20, fontWeight: .regular, lineHeight: 25, letterSpacing: -0.4)
             case .body1Semibold:
-                return (17, .semibold, 22, -0.4)
+                return TypographyAttributes(fontSize: 17, fontWeight: .semibold, lineHeight: 22, letterSpacing: -0.4)
             case .body1Medium:
-                return (17, .medium, 22, -0.4)
+                return TypographyAttributes(fontSize: 17, fontWeight: .medium, lineHeight: 22, letterSpacing: -0.4)
             case .body1Regular:
-                return (17, .regular, 22, -0.4)
+                return TypographyAttributes(fontSize: 17, fontWeight: .regular, lineHeight: 22, letterSpacing: -0.4)
             case .body2Semibold:
-                return (15, .semibold, 20, -0.4)
+                return TypographyAttributes(fontSize: 15, fontWeight: .semibold, lineHeight: 20, letterSpacing: -0.4)
             case .body2Regular:
-                return (15, .regular, 20, -0.4)
+                return TypographyAttributes(fontSize: 15, fontWeight: .regular, lineHeight: 20, letterSpacing: -0.4)
             case .caption1Regular:
-                return (13, .regular, 18, -0.4)
+                return TypographyAttributes(fontSize: 13, fontWeight: .regular, lineHeight: 18, letterSpacing: -0.4)
             case .caption1Semibold:
-                return (11, .semibold, 13, -0.4)
+                return TypographyAttributes(fontSize: 11, fontWeight: .semibold, lineHeight: 13, letterSpacing: -0.4)
             case .caption3Regular:
-                return (10, .regular, 12, -0.4)
+                return TypographyAttributes(fontSize: 10, fontWeight: .regular, lineHeight: 12, letterSpacing: -0.4)
+            case .custom(let customAttributes):
+                return customAttributes
             }
         }
     }
