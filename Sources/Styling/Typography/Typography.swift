@@ -79,6 +79,7 @@ extension Typography {
         /// Font Size: 10px
         case caption3Regular
         
+        #warning("TODO, probably add custom as well for flexibility AND attributes should be wrapped in some structure, not cartage")
         var attributes: (fontSize: CGFloat, fontWeight: UIFont.Weight, lineHeight: CGFloat, letterSpacing: CGFloat) {
             switch self {
             case .largeTitle:

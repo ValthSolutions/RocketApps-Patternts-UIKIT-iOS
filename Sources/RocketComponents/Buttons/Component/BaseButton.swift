@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+    
+#warning("TODO - for button I would say it's better to have substiles, because pontenyially not only borderColor can change, so you can have map [UIButton.State: ButtonStyle] and apply style on state change")
 open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
     
     public typealias Style = ButtonStyle

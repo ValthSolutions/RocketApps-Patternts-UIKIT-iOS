@@ -1,5 +1,6 @@
 import UIKit
 
+#warning("TODO - for more flexibility, I would say it's better to use protocol here to be able to overload function if needed")
 public extension UILabel {
     func applyTypography(fontFamily: String, style: Typography.Style, text: String) {
         let profile = FontProfile(fontFamily: fontFamily, style: style)

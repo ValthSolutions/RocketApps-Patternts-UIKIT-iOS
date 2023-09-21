@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+#warning("TODO - default colors can be moved to global Constants for reusing in several places")
 /// A style configuration to customize the appearance and behavior of a toggle control.
 open class ToggleStyle {
     

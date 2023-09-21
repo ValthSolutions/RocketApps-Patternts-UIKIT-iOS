@@ -7,6 +7,7 @@
 
 import UIKit
 
+#warning("TODO - why UIImage only?")
 public extension UIImage {
     convenience init(color: UIColor, cornerRadius: CGFloat = 0, size: CGSize = CGSize(width: 1, height: 1)) {
         UIGraphicsBeginImageContext(size)

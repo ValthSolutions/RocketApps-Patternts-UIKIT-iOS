@@ -7,6 +7,7 @@
 
 import UIKit
 
+#warning("TODO - in additon to comment in ButtonStyle, it will let you to pass ButtonStates and their styles dynamically in this enum without strict field-based dependencies")
 public enum ButtonStyleType: Equatable {
     case primary(defaultColor: ColorScheme,
                  pressedColor: ColorScheme? = nil,
