@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 18.09.2023.
-//
-
 import UIKit
     
 #warning("TODO - for button I would say it's better to have substiles, because pontenyially not only borderColor can change, so you can have map [UIButton.State: ButtonStyle] and apply style on state change")
