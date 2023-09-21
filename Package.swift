@@ -20,7 +20,10 @@ let package = Package(
             targets: ["RocketNavigationComponents"]),
         .library(
             name: "RocketBasicComponents",
-            targets: ["RocketBasicComponents"])
+            targets: ["RocketBasicComponents"]),
+        .library(
+            name: "RocketSolutions",
+            targets: ["RocketSolutions"])
     ],
     targets: [
         .target(
@@ -29,12 +32,16 @@ let package = Package(
             name: "RocketComponents",
             dependencies: ["Styling",
                            "RocketNavigationComponents",
-                           "RocketBasicComponents"]),
+                           "RocketBasicComponents",
+                           "RocketSolutions"]),
         .target(
             name: "RocketNavigationComponents",
             dependencies: ["Styling"]),
         .target(
             name: "RocketBasicComponents",
+            dependencies: ["Styling"]),
+        .target(
+            name: "RocketSolutions",
             dependencies: ["Styling"])
     ]
 )
