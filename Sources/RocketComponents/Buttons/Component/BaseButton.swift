@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 18.09.2023.
-//
-
 import UIKit
 
 open class BaseButton: UIButton, Decoratable, Iconable, Colorable {
