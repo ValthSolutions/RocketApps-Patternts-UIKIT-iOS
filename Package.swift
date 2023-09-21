@@ -15,11 +15,26 @@ let package = Package(
         .library(
             name: "RocketComponents",
             targets: ["RocketComponents"]),
+        .library(
+            name: "RocketNavigationComponents",
+            targets: ["RocketNavigationComponents"]),
+        .library(
+            name: "RocketBasicComponents",
+            targets: ["RocketBasicComponents"])
     ],
     targets: [
         .target(
             name: "Styling"),
         .target(
-            name: "RocketComponents", dependencies: ["Styling"])
+            name: "RocketComponents",
+            dependencies: ["Styling",
+                           "RocketNavigationComponents",
+                           "RocketBasicComponents"]),
+        .target(
+            name: "RocketNavigationComponents",
+            dependencies: ["Styling"]),
+        .target(
+            name: "RocketBasicComponents",
+            dependencies: ["Styling"])
     ]
 )
