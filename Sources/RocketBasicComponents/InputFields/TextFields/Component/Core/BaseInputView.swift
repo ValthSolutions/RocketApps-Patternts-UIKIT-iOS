@@ -1,10 +1,3 @@
-//
-//  File.swift
-//
-//
-//  Created by Alexandr Mefisto on 02.08.2023.
-//
-
 import UIKit
 import Foundation
 import Combine
@@ -35,7 +28,7 @@ open class BaseInputView: NiblessView {
 
     public var nextInput: UIResponder?
     
-    var type: InputFieldType = .email
+    var type: TextFieldConfiguration?
     
     let errorLabel = Label(text: "",
                                    textColor: .red,
@@ -54,10 +47,11 @@ open class BaseInputView: NiblessView {
     
     // MARK: Initializers
     
-    public init(type: InputFieldType,
+    public init(type: TextFieldConfiguration,
                 textColor: UIColor = .black,
                 topLabelColor: UIColor = UIColor.black.withAlphaComponent(0.4),
                 nextInput: TextFieldView? = nil) {
+        
         super.init(frame: .zero)
         
         errorLabel.isHidden = true
@@ -71,16 +65,17 @@ open class BaseInputView: NiblessView {
     }
     
     func setup() {
-        topLabel.text = type.topLabel
+        topLabel.text = type?.topLabel ?? ""
         topLabel.textColor = topLabelColor
         setupConstraints()
     }
     
-    func setup(with type: InputFieldType, nextInput: TextFieldView? = nil) {
+    func setup(with type: TextFieldConfiguration,
+               nextInput: TextFieldView? = nil) {
         configureTextField(with: type)
     }
     
-    func configureTextField(with type: InputFieldType) {
+    func configureTextField(with type: TextFieldConfiguration) {
         
     }
     
@@ -157,6 +152,17 @@ extension BaseInputView {
     }
 }
 
+public extension BaseInputView {
+    func createTextAndEditingStatePublisher() -> (textPublisher: AnyPublisher<String?, Never>, editingStatePublisher: AnyPublisher<Void, Never>) {
+        let textPublisher = self.textDidChangePublisher
+            .eraseToAnyPublisher()
+        let editingStatePublisher = self.didEndEditingPublisher
+            .eraseToAnyPublisher()
+        return (textPublisher, editingStatePublisher)
+    }
+}
+
+
 // MARK: - TextFieldNextDelegate
 
 extension BaseInputView: TextFieldNextDelegate {
@@ -180,13 +186,5 @@ extension BaseInputView: ValidationResultAdapter {
         case .failure(let error):
             showError(.error(message: error.description, delta: BaseInputViewConstants.errorDelta))
         }
-    }
-}
-
-public extension BaseInputView {
-    func createTextAndEditingStatePublisher() -> (textPublisher: AnyPublisher<String?, Never>, editingStatePublisher: AnyPublisher<Void, Never>) {
-        let textPublisher = self.textDidChangePublisher.eraseToAnyPublisher()
-        let editingStatePublisher = self.didEndEditingPublisher.eraseToAnyPublisher()
-        return (textPublisher, editingStatePublisher)
     }
 }

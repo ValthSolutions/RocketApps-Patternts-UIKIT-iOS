@@ -1,10 +1,3 @@
-//
-//  File.swift
-//
-//
-//  Created by Alexandr Mefisto on 26.04.2023.
-//
-
 import UIKit
 
 public final class Label: UILabel {

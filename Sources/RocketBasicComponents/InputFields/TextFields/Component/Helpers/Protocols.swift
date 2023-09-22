@@ -7,29 +7,14 @@
 
 import UIKit
 
-/// Conform to this protocol to provide error messanges
-public protocol ValidationErrorConvertible {
-    var errorDescription: String { get }
+public protocol TitleIdble {
+    var id: String { get }
+    var title: String { get }
 }
-
 
 public enum ErrorState {
     case error(message: String, delta: CGFloat)
     case noError(delta: CGFloat)
-}
-
-extension String: ValidationErrorConvertible {
-    public var errorDescription: String {
-        return self
-    }
-}
-
-public protocol TextFieldConfiguration {
-    var placeholder: String { get }
-    var topLabel: String { get }
-    var capitalization: UITextAutocapitalizationType { get }
-    var contentType: UITextContentType? { get }
-    var keyboardType: UIKeyboardType { get }
 }
 
 // MARK: - BaseInputView

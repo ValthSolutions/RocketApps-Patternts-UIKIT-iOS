@@ -13,6 +13,7 @@ public class TextField: UITextField {
         }
     }
     
+    public var didFinishedEditingClosure: ((String?) -> Void)?
     
     public var isPhone: Bool = false
     public let didEndEditingSubject = PassthroughSubject<Void, Never>()
@@ -38,7 +39,7 @@ public class TextField: UITextField {
     
     public func setPlaceholder(_ text: String?, color: UIColor = UIColor.black) {
         
-        let font: UIFont = .italicSystemFont(ofSize: 12)
+        let font: UIFont = .systemFont(ofSize: 15)
         
         let placeholderColor = color.withAlphaComponent(0.4)
         let attributes: [NSAttributedString.Key: Any] = [
@@ -79,9 +80,9 @@ public class TextField: UITextField {
     
     func setupAppearance() {
         backgroundColor = .clear
-        layer.borderColor = UIColor.blue.cgColor
-            layer.borderWidth = 1.0
-            layer.cornerRadius = 4
+        layer.borderColor = UIColor.gray.cgColor
+        layer.borderWidth = 1.0
+        layer.cornerRadius = 4
     }
     
     private func updateUI() {
@@ -112,6 +113,7 @@ extension TextField: UITextFieldDelegate {
     public func textFieldDidEndEditing(_ textField: UITextField) {
         normalState()
         didEndEditingSubject.send(())
+        didFinishedEditingClosure?(text)
     }
     
     public func textField(_ textField: UITextField,
@@ -132,10 +134,10 @@ extension TextField: UITextFieldDelegate {
         if newText.contains("  ") {
             return false
         }
-
+        
         return true
     }
-
+    
     private func updateEditingState() {
         editingState()
         didEndEditingSubject.send()
@@ -143,29 +145,5 @@ extension TextField: UITextFieldDelegate {
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return nextDelegate?.textFieldShouldReturn(self) ?? true
-    }
-}
-
-class TextFieldDelegate {
-    func textField(_ textField: UITextField,
-                   shouldChangeCharactersIn range: NSRange,
-                   replacementString string: String) -> (shouldChange: Bool, text: String) {
-        let newString = NSString(string: textField.text ?? "").replacingCharacters(in: range, with: string)
-        let formattedString = formatPhoneNumber(newString)
-        return (false, formattedString)
-    }
-    
-    func formatPhoneNumber(_ phoneNumber: String) -> String {
-        let rawNumber = phoneNumber.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression, range: nil)
-        var formattedString = ""
-        var index = 0
-        for char in rawNumber {
-            if index == 2 || index == 5 {
-                formattedString += " "
-            }
-            formattedString += String(char)
-            index += 1
-        }
-        return formattedString
     }
 }

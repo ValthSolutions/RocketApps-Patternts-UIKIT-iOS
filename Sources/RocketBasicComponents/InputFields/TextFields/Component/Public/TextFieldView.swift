@@ -56,17 +56,18 @@ public final class TextFieldView: BaseInputView {
     override func setup() {
         super.setup()
         setupUI()
+        
         textDidChangePublisher = inputTextField.textDidChangePublisher
-        didEndEditingPublisher = inputTextField.didEndEditingSubject.print().eraseToAnyPublisher()
+        didEndEditingPublisher = inputTextField.didEndEditingSubject.eraseToAnyPublisher()
     }
     
-    override func setup(with type: InputFieldType, nextInput: TextFieldView? = nil) {
+    override func setup(with type: TextFieldConfiguration, nextInput: TextFieldView? = nil) {
         configureTextField(with: type)
         self.type = type
         self.nextInput = nextInput?.inputTextField
     }
     
-    override func configureTextField(with type: InputFieldType) {
+    override func configureTextField(with type: TextFieldConfiguration) {
         defaultSetup(type)
     }
     
@@ -101,11 +102,11 @@ extension TextFieldView {
     
     // MARK: - Pickers Setup
     
-    private func defaultSetup(_ type: InputFieldType) {
+    private func defaultSetup(_ type: TextFieldConfiguration) {
         inputTextField.setPlaceholder(type.placeholder, color: textColor)
         topLabel.text = type.topLabel
         inputTextField.isSecureTextEntry = type.needEyeSecure
-        inputTextField.autocapitalizationType = type.capitalization
+        inputTextField.autocapitalizationType = type.autocapitalizationType
         inputTextField.keyboardType = type.keyboardType
         inputTextField.textContentType = type.contentType
         inputTextField.rightViewMode = type.needEyeSecure ? .always : .never
