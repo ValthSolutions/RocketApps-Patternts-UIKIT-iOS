@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import Styling
 
 public protocol TextFieldNextDelegate: AnyObject {
     func textFieldShouldReturn(_ textField: TextField) -> Bool
@@ -17,12 +18,13 @@ open class TextField: UITextField {
         }
     }
     
-    let editingBorderColor = UIColor.red.cgColor
-    let normalBorderColor = UIColor.blue.cgColor
+    var editingBorderColor = UIColor.red.cgColor
+    var normalBorderColor = UIColor.blue.cgColor
     
     var errorColor: UIColor = .red
     var normalTextColor: UIColor = .black
     private var isEditingStarted: Bool = false
+    private var currentFontProfile: FontProfile?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,15 +38,11 @@ open class TextField: UITextField {
     }
     
     open func setPlaceholder(_ text: String?, color: UIColor = UIColor.black) {
-        
-        let font: UIFont = .boldSystemFont(ofSize: 12)
-        
-        let placeholderColor = color.withAlphaComponent(0.4)
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: placeholderColor,
-            .font: font
-        ]
-        attributedPlaceholder = NSAttributedString(string: text ?? "", attributes: attributes)
+        if let currentFontProfile = currentFontProfile {
+            attributedPlaceholder = applyTypography(fontFamily: currentFontProfile.fontFamily,
+                                                    style: currentFontProfile.style,
+                                                    text: self.text ?? "")
+        }
     }
     
     public override func textRect(forBounds bounds: CGRect) -> CGRect {
@@ -127,5 +125,19 @@ extension TextField: UITextFieldDelegate {
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return nextDelegate?.textFieldShouldReturn(self) ?? true
+    }
+}
+
+extension TextField: Decoratable {
+    public typealias Style = TextFieldStyle
+
+    public func decorate(with style: Style) {
+        setPlaceholder(style.placeholderText, color: style.placeholderColor)
+        self.editingBorderColor = style.editingBorderColor.cgColor
+        self.normalBorderColor = style.normalBorderColor.cgColor
+        self.errorColor = style.errorColor
+        self.normalTextColor = style.normalTextColor
+        guard let fontProfile = style.fontProfile else { return }
+        self.currentFontProfile = fontProfile
     }
 }

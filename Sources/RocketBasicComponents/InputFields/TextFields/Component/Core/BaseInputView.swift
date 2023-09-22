@@ -24,21 +24,24 @@ open class BaseInputView: NiblessView {
     
     let errorLabel = BaseLabel()
     let topLabel = BaseLabel()
-    
+    let style: TextFieldStyle
+
     var baseIntputView = UIView(frame: .zero)
     var configuration: TextFieldConfiguration!
     
     var topLabelColor: UIColor = .black
     var textColor: UIColor = .black
-    
+
     // MARK: Initializers
     
     public init(configuration: TextFieldConfiguration,
+                style: TextFieldStyle,
                 nextInput: TextFieldView? = nil) {
+        self.style = style
         super.init(frame: .zero)
         
+        self.topLabelColor = style.topLabelColor
         self.configuration = configuration
-        
         errorLabel.isHidden = true
         isUserInteractionEnabled = true
         setup()

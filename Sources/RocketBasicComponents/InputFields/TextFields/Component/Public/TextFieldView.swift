@@ -7,6 +7,14 @@ open class TextFieldView: BaseInputView {
       
     }
     
+    public override init(configuration: TextFieldConfiguration,
+                         style: TextFieldStyle, nextInput: TextFieldView? = nil) {
+        super.init(configuration: configuration,
+                   style: style,
+                   nextInput: nextInput)
+        self.inputTextField.decorate(with: style)
+    }
+    
     // MARK: - Properties and UI elements
     public override var isValid: Bool {
         didSet {

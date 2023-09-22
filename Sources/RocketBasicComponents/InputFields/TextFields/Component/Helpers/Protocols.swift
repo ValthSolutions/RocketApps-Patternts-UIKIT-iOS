@@ -17,26 +17,6 @@ public enum ErrorState {
     case noError
 }
 
-public protocol ValidationResultAdapter: AnyObject {
-    associatedtype ErrorType
-    associatedtype Result = ValidationResult<ErrorType>
-    func applyValidationResult(_ validationResult: Result)
-}
-
-public enum ValidationResult<E> {
-    case success
-    case failure(E)
-    
-    public var isValid: Bool {
-        switch self {
-        case .success:
-            return true
-        case .failure:
-            return false
-        }
-    }
-}
-
 extension String: ValidationErrorConvertible {
     public var errorDescription: String {
         return self

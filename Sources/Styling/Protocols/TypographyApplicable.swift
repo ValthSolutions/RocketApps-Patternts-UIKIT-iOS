@@ -14,3 +14,7 @@ public protocol TypographyApplicable {
 public protocol TypographyButtonApplicable {
     func applyTypography(fontFamily: String, style: Typography.Style, text: String, forState state: UIControl.State)
 }
+
+public protocol TypographyTextFieldApplicable {
+    func applyTypography(fontFamily: String, style: Typography.Style, text: String) -> NSAttributedString
+}
