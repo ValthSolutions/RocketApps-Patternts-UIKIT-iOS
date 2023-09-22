@@ -9,7 +9,6 @@ import UIKit
 import Styling
 
 public struct TextFieldStyle {
-    let placeholderText: String?
     let placeholderColor: UIColor
     let fontProfile: FontProfile?
     let editingBorderColor: UIColor
@@ -20,7 +19,6 @@ public struct TextFieldStyle {
     let isAnimated: Bool
     
     public init(
-        placeholderText: String? = nil,
         placeholderColor: UIColor = .black.withAlphaComponent(0.4),
         fontProfile: FontProfile? = nil,
         editingBorderColor: UIColor = .red,
@@ -30,7 +28,6 @@ public struct TextFieldStyle {
         topLabelColor: UIColor = .black,
         isAnimated: Bool = true
     ) {
-        self.placeholderText = placeholderText
         self.placeholderColor = placeholderColor
         self.fontProfile = fontProfile
         self.editingBorderColor = editingBorderColor

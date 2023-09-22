@@ -12,9 +12,10 @@ public protocol ValidationErrorConvertible {
     var errorDescription: String { get }
 }
 
+
 public enum ErrorState {
-    case error(message: String)
-    case noError
+    case error(message: String, delta: CGFloat)
+    case noError(delta: CGFloat)
 }
 
 extension String: ValidationErrorConvertible {
@@ -29,7 +30,18 @@ public protocol TextFieldConfiguration {
     var capitalization: UITextAutocapitalizationType { get }
     var contentType: UITextContentType? { get }
     var keyboardType: UIKeyboardType { get }
-    var filter: String? { get }
-    var needEyeSecure: Bool { get }
-    var needPhoneFormatter: Bool { get }
+}
+
+// MARK: - BaseInputView
+
+public protocol BaseInputViewDelegate: AnyObject {
+    func textFieldView(_ textFieldView: BaseInputView, didChangeHeight additionalHeight: CGFloat, animated: Bool)
+}
+
+public protocol TextFieldViewButtonDelegate: AnyObject {
+    func textFieldViewDidTapButton(_ textFieldView: TextFieldView)
+}
+
+public protocol TextFieldViewDidSelectDelegate: AnyObject {
+    func textFieldView(_ textFieldView: TextFieldView, didSelectTitle title: TitleIdble)
 }

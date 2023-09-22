@@ -1,6 +1,20 @@
-public enum ValidationResult<E> {
+//public enum ValidationResult<E> {
+//    case success
+//    case failure(E)
+//
+//    public var isValid: Bool {
+//        switch self {
+//        case .success:
+//            return true
+//        case .failure:
+//            return false
+//        }
+//    }
+//}
+
+public enum ValidationResult {
     case success
-    case failure(E)
+    case failure(ValidationError)
     
     public var isValid: Bool {
         switch self {
@@ -8,6 +22,18 @@ public enum ValidationResult<E> {
             return true
         case .failure:
             return false
+        }
+    }
+}
+
+public enum ValidationError: Error {
+    case emptyValue
+    // MARK: - ErrorDescription
+    
+    public var description: String {
+        switch self {
+        case .emptyValue:
+            return "emptyValue"
         }
     }
 }

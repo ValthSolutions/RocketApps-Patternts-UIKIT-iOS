@@ -6,21 +6,20 @@ public enum ValidationType {
 }
 
 public class ValidationChain {
-    public typealias ErrorType = ValidationErrorConvertible
-
+    
     private let validators: [Validator]
     private let validationType: ValidationType
-    private let validationError: ValidationErrorConvertible
+    private let validationError: ValidationError
     
     public init(validators: [Validator],
                 validationType: ValidationType = .AND,
-                validationError: ValidationErrorConvertible) {
+                validationError: ValidationError = .emptyValue) {
         self.validators = validators
         self.validationType = validationType
         self.validationError = validationError
     }
     
-    public func validate(_ value: String) -> ValidationResult<ErrorType> {
+    public func validate(_ value: String) -> ValidationResult {
         switch validationType {
             
         case .AND:
@@ -30,7 +29,7 @@ public class ValidationChain {
         }
     }
     
-    public func validateAND(_ value: String) -> ValidationResult<ErrorType> {
+    public func validateAND(_ value: String) -> ValidationResult {
         for validator in validators {
             if case let .failure(error) = validator.validate(value: value) {
                 return .failure(error)
@@ -39,7 +38,7 @@ public class ValidationChain {
         return .success
     }
     
-    public func validateOR(_ value: String) -> ValidationResult<ErrorType> {
+    public func validateOR(_ value: String) -> ValidationResult {
         for validator in validators {
             switch validator.validate(value: value) {
                 

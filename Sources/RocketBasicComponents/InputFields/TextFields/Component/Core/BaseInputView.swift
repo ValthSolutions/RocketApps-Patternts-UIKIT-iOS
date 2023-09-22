@@ -1,5 +1,13 @@
+//
+//  File.swift
+//
+//
+//  Created by Alexandr Mefisto on 02.08.2023.
+//
 
 import UIKit
+import Foundation
+import Combine
 import Styling
 import LayoutKit
 
@@ -8,49 +16,72 @@ open class BaseInputView: NiblessView {
     // MARK: - Constants
     enum BaseInputViewConstants {
         static let errorLabelHeight: CGFloat = 77
+        static let noErrorLabelHeight: CGFloat = 64
         static let initialHeight: CGFloat = 64
         static let topLabelHeight: CGFloat = 18
         static let fieldHeight: CGFloat = 44
         static let leadingOffset: CGFloat = 16
         static let errorDelta: CGFloat = 13
     }
-    
+    // MARK: - Validation Publishers
+    public var textDidChangePublisher: AnyPublisher<String?, Never>!
+    public var didEndEditingPublisher: AnyPublisher<Void, Never>!
+
     public var isValid: Bool = true
     
     // MARK: - Properties and UI elements
     public var value: String { "" }
-    
+    public weak var delegate: BaseInputViewDelegate?
+
     public var nextInput: UIResponder?
     
-    let errorLabel = BaseLabel()
-    let topLabel = BaseLabel()
-    let style: TextFieldStyle
-
+    var type: InputFieldType = .email
+    
+    let errorLabel = Label(text: "",
+                                   textColor: .red,
+                           font: .systemFont(ofSize: 10),
+                                   alignment: .left)
+    let topLabel = Label(text: "",
+                                 textColor: UIColor.black.withAlphaComponent(0.4),
+                         font: .systemFont(ofSize: 10),
+                                 alignment: .left)
     var baseIntputView = UIView(frame: .zero)
-    var configuration: TextFieldConfiguration!
     
     var topLabelColor: UIColor = .black
     var textColor: UIColor = .black
-
+    
+    var heightConstraint: NSLayoutConstraint?
+    
     // MARK: Initializers
     
-    public init(configuration: TextFieldConfiguration,
-                style: TextFieldStyle,
+    public init(type: InputFieldType,
+                textColor: UIColor = .black,
+                topLabelColor: UIColor = UIColor.black.withAlphaComponent(0.4),
                 nextInput: TextFieldView? = nil) {
-        self.style = style
         super.init(frame: .zero)
         
-        self.topLabelColor = style.topLabelColor
-        self.configuration = configuration
         errorLabel.isHidden = true
         isUserInteractionEnabled = true
+        self.topLabelColor = topLabelColor
+        self.textColor = textColor
+        
+        self.type = type
+        setup(with: type, nextInput: nextInput)
         setup()
     }
     
     func setup() {
-        topLabel.text = configuration.topLabel
+        topLabel.text = type.topLabel
         topLabel.textColor = topLabelColor
         setupConstraints()
+    }
+    
+    func setup(with type: InputFieldType, nextInput: TextFieldView? = nil) {
+        configureTextField(with: type)
+    }
+    
+    func configureTextField(with type: InputFieldType) {
+        
     }
     
     func setupHierarchy() {
@@ -61,6 +92,10 @@ open class BaseInputView: NiblessView {
     func setupConstraints() {
         setupHierarchy()
         addSubview(baseIntputView)
+        
+        makeConstraints { make in
+            heightConstraint = make.height.equalTo(BaseInputViewConstants.initialHeight)
+        }
         
         topLabel.makeConstraints { make in
             make.height.greaterThanOrEqualTo(BaseInputViewConstants.topLabelHeight)
@@ -77,7 +112,6 @@ open class BaseInputView: NiblessView {
         }
         
         errorLabel.makeConstraints { make in
-            make.top.equalTo(baseIntputView.topAnchor).offset(10)
             make.leading.equalTo(topLabel.leadingAnchor)
             make.trailing.equalToSuperview()
             make.bottom.equalTo(bottomAnchor)
@@ -99,14 +133,18 @@ extension BaseInputView {
     
     public func showError(_ state: ErrorState, animated: Bool = true) {
         switch state {
-        case .error(let errorMessage):
+        case .error(let errorMessage, let delta):
             let isErrorLabelHidden = errorLabel.isHidden
             crossfadeErrorLabel(to: errorMessage, duration: animated ? 0.1 : 0)
             if isErrorLabelHidden {
                 errorLabel.isHidden = false
+                heightConstraint?.constant = BaseInputViewConstants.errorLabelHeight
+                delegate?.textFieldView(self, didChangeHeight: delta, animated: animated)
             }
-        case .noError:
+        case .noError(let delta):
             errorLabel.isHidden = true
+            heightConstraint?.constant = BaseInputViewConstants.noErrorLabelHeight
+            delegate?.textFieldView(self, didChangeHeight: delta, animated: animated)
         }
         
         if animated {
@@ -118,17 +156,37 @@ extension BaseInputView {
         }
     }
 }
+
+// MARK: - TextFieldNextDelegate
+
+extension BaseInputView: TextFieldNextDelegate {
+    public func textFieldShouldReturn(_ textField: TextField) -> Bool {
+        if let next: UIResponder = nextInput {
+            next.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+}
+
 // MARK: - Validation Adapter
 
 extension BaseInputView: ValidationResultAdapter {
-    public typealias ErrorType = ValidationErrorConvertible
-    
-    public func applyValidationResult(_ validationResult: ValidationResult<ErrorType>) {
+    public func applyValidationResult(_ validationResult: ValidationResult) {
         switch validationResult {
         case .success:
-            showError(.noError)
+            showError(.noError(delta: -BaseInputViewConstants.errorDelta))
         case .failure(let error):
-            showError(.error(message: error.errorDescription))
+            showError(.error(message: error.description, delta: BaseInputViewConstants.errorDelta))
         }
+    }
+}
+
+public extension BaseInputView {
+    func createTextAndEditingStatePublisher() -> (textPublisher: AnyPublisher<String?, Never>, editingStatePublisher: AnyPublisher<Void, Never>) {
+        let textPublisher = self.textDidChangePublisher.eraseToAnyPublisher()
+        let editingStatePublisher = self.didEndEditingPublisher.eraseToAnyPublisher()
+        return (textPublisher, editingStatePublisher)
     }
 }
