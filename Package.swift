@@ -25,6 +25,11 @@ let package = Package(
             name: "RocketSolutions",
             targets: ["RocketSolutions"])
     ],
+    
+    dependencies: [
+        .package(url: "git@github.com:Paletech/iOS-layout.git", branch: "develop")
+    ],
+    
     targets: [
         .target(
             name: "Styling"),
@@ -39,7 +44,9 @@ let package = Package(
             dependencies: ["Styling"]),
         .target(
             name: "RocketBasicComponents",
-            dependencies: ["Styling"]),
+            dependencies: ["Styling",
+                           .product(name: "LayoutKit", package: "iOS-layout")
+]),
         .target(
             name: "RocketSolutions",
             dependencies: ["Styling"])
