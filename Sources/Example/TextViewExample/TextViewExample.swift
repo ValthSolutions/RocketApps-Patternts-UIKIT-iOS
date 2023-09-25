@@ -1,14 +1,7 @@
-//
-//  ViewController.swift
-//  Texs
-//
-//  Created by LEMIN DAHOVICH on 19.09.2023.
-//
-
 import UIKit
 import RocketComponents
+import Combine
 
-// Create a extension to a Validator to define a validation RULE
 public extension Validator {
     static var notEmpty: Validator {
         return Validator { value in
@@ -16,8 +9,6 @@ public extension Validator {
         }
     }
 }
-
-// MARK: - VC
 
 class ViewController: UIViewController {
     
@@ -36,40 +27,38 @@ class ViewController: UIViewController {
     private func bindAndValidateInputs() {
         
         let validationChains = [
-            rootView.newPasswordTextFieldView: RootView.emailConfiguration.validationChain,
-            rootView.confirmPasswordTextFieldView: RootView.customConfiguration.validationChain
+            rootView.noteTextView: RootView.customConfiguration.validationChain
         ]
         
-        let validator = ValidationHolder(baseInputViews: [rootView.newPasswordTextFieldView,
-                                                      rootView.confirmPasswordTextFieldView],
+        let validator = ValidationHolder(baseInputViews: [rootView.noteTextView,
+                                                          rootView.noteTextView],
                                          validationChains: validationChains)
         validator.bindValidationPublishers(to: rootView)
     }
 }
 
-// MARK: - Root view
-
 final class RootView: NiblessView, IValidationForm {
     var cancellables = Set<AnyCancellable>()
     
-    public var allFields: [TextFieldView] { [newPasswordTextFieldView,
-                                             confirmPasswordTextFieldView] }
+    private(set) lazy var noteTextView = TextView(config: RootView.customConfiguration)
 
-    private(set) var newPasswordTextFieldView = TextFieldView(config: TextFieldConfiguration(placeholder: "Hi",
-                                                                                             topLabel: "safasf"))
-    private(set) var confirmPasswordTextFieldView = TextFieldView(config: TextFieldConfiguration(placeholder: "Hi",
-                                                                                                 topLabel: "safasf"))
-    
-    private(set) lazy var fieldStackView = ExpandableStackView(textFields: allFields)
+    static let customConfiguration = TextFieldConfiguration(
+        placeholder: "Custom Placeholder",
+        topLabel: "Custom Label",
+        keyboardType: .default,
+        validationChain: ValidationChain(validators: [Validator.notEmpty],
+                                         validationError: DefaultValidationError.emptyValue)
+    )
 
     init() {
         super.init(frame: .zero)
         setupUI()
-        allFields.forEach { $0.decorate(with: .init(height: nil))}
+        noteTextView.decorate(with: .init(height: nil))
+        noteTextView.setPlaceholder("HELO World")
     }
     
     func updateUIWithFiredPublisher(isEnabled: Bool) {
-        // get %('allFields') True|False from validation system
+
     }
 }
 
@@ -77,8 +66,7 @@ final class RootView: NiblessView, IValidationForm {
 
 extension RootView {
     private func setupHierarchy() {
-        let views = []
-        addSubviews(fieldStackView)
+        addSubview(noteTextView)
     }
     
     private func setupUI() {
@@ -92,7 +80,7 @@ extension RootView {
 
 extension RootView {
     private func setupConstraints() {
-        fieldStackView.makeConstraints { make in
+        noteTextView.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.topAnchor).offset(16)
             make.leading.equalTo(leadingAnchor).offset(16)
             make.trailing.equalTo(trailingAnchor).offset(-16)

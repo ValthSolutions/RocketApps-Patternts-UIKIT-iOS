@@ -75,8 +75,8 @@ class Skeleton {
     
     // MARK: - TextView Styles
     struct TextViewStyles {
-        static var defaultStyle: TextViewStyle {
-            return TextViewStyle(fontProfile: FontProfile(style: .title3Bold),
+        static var defaultStyle: InputFieldStyle {
+            return InputFieldStyle(fontProfile: FontProfile(style: .title3Bold),
                                  backgroundColor: ColorScheme(light: .lightGray, dark: .black),
                                  textColor: ColorScheme(light: .black, dark: .white),
                                  spacing: Spacing.step4,

@@ -37,10 +37,15 @@ open class TextFieldView: BaseInputView {
     
     // MARK: Initializers
     
-    public override init(config: TextFieldConfiguration,
+    public override init(config: TextFieldConfiguration?,
                          nextInput: TextFieldView? = nil) {
         super.init(config: config,
                    nextInput: nextInput)
+    }
+    
+    open override func decorate(with style: InputFieldStyle) {
+        super.decorate(with: style)
+        inputTextField.decorate(with: style)
     }
     
     override func setup() {
@@ -51,7 +56,8 @@ open class TextFieldView: BaseInputView {
         didEndEditingPublisher = inputTextField.didEndEditingSubject.eraseToAnyPublisher()
     }
     
-    override func setup(with config: TextFieldConfiguration, nextInput: TextFieldView? = nil) {
+    override func setup(with config: TextFieldConfiguration,
+                        nextInput: TextFieldView? = nil) {
         configureTextField(with: config)
         self.type = config
         self.nextInput = nextInput?.inputTextField

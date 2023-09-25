@@ -15,12 +15,14 @@ open class BaseInputView: NiblessView {
         static let topLabelLeadingOffset: CGFloat = 0
         static let errorDelta: CGFloat = 13
     }
+    
     // MARK: - Validation Publishers
     public var textDidChangePublisher: AnyPublisher<String?, Never>!
     public var didEndEditingPublisher: AnyPublisher<Void, Never>!
 
     public var isValid: Bool = true
-    
+    public typealias Style = InputFieldStyle
+
     // MARK: - Properties and UI elements
     public var value: String { "" }
     public weak var delegate: BaseInputViewDelegate?
@@ -38,20 +40,37 @@ open class BaseInputView: NiblessView {
     var textColor: UIColor = .black
     var currentStyle: InputFieldStyle?
     var heightConstraint: NSLayoutConstraint?
-
+    var config: TextFieldConfiguration?
+    
     // MARK: Initializers
     
-    public init(config: TextFieldConfiguration,
+    public init(config: TextFieldConfiguration? = nil,
                 nextInput: TextFieldView? = nil) {
-        
+        self.config = config
         super.init(frame: .zero)
         
         errorLabel.isHidden = true
         isUserInteractionEnabled = true
 
         self.type = config
-        setup(with: config, nextInput: nextInput)
+        if let config {
+            setup(with: config, nextInput: nextInput)
+        }
         setup()
+    }
+    
+    open func decorate(with style: InputFieldStyle) {
+        setup()
+        self.currentStyle = style
+        self.topLabelColor = style.topLabelColor?.color ?? .black
+        self.textColor = style.textColor?.color ?? .black
+        if let topStyle = style.topLabelStyle {
+            self.topLabel.decorate(with: topStyle)
+        }
+        if let errorStyle = style.errorLabelStyle {
+            self.errorLabel.decorate(with: errorStyle)
+        }
+        applyTypographyToBaseInput()
     }
     
     func setup() {
@@ -106,21 +125,7 @@ open class BaseInputView: NiblessView {
 
 // MARK: - Decorator
 extension BaseInputView: Decoratable {
-    public typealias Style = InputFieldStyle
-    
-    public func decorate(with style: InputFieldStyle) {
-        setup()
-        self.currentStyle = style
-        self.topLabelColor = style.topLabelColor?.color ?? .black
-        self.textColor = style.textColor?.color ?? .black
-        if let topStyle = style.topLabelStyle {
-            self.topLabel.decorate(with: topStyle)
-        }
-        if let errorStyle = style.errorLabelStyle {
-            self.errorLabel.decorate(with: errorStyle)
-        }
-        applyTypographyToBaseInput()
-    }
+
 }
 
 // MARK: - Errors

@@ -19,8 +19,8 @@ public class TextField: UITextField {
     public let didEndEditingSubject = PassthroughSubject<Void, Never>()
     public weak var nextDelegate: TextFieldNextDelegate?
     
-    let editingBorderColor = UIColor.blue.cgColor
-    let normalBorderColor = UIColor.gray.cgColor
+    var editingBorderColor = UIColor.blue.cgColor
+    var normalBorderColor = UIColor.gray.cgColor
     
     var errorColor: UIColor = .red
     var normalTextColor: UIColor = .black
@@ -68,13 +68,6 @@ public class TextField: UITextField {
         self.text = text
     }
     
-    open func setupAppearance() {
-        backgroundColor = .clear
-        layer.borderColor = UIColor.gray.cgColor
-        layer.borderWidth = 1.0
-        layer.cornerRadius = 4
-    }
-    
     open func normalState() {
         textColor = normalTextColor
         layer.borderColor = normalBorderColor
@@ -83,6 +76,20 @@ public class TextField: UITextField {
     open func editingState() {
         textColor = normalTextColor
         layer.borderColor = editingBorderColor
+    }
+    
+    open func decorate(with style: InputFieldStyle) {
+        if let editingBorderColor = style.editingBorderColor?.color.cgColor {
+            self.editingBorderColor = editingBorderColor
+        }
+        
+        layer.borderWidth = style.borderWidth ?? 1.0
+        layer.cornerRadius = style.effect?.cornerRadius ?? 4
+        backgroundColor = style.backgroundColor?.color ?? .clear
+        if let normalBorderColor = style.borderColor?.color.cgColor {
+            self.normalBorderColor = normalBorderColor
+            normalState()
+        }
     }
     
     private func updateUI() {
@@ -97,9 +104,7 @@ public class TextField: UITextField {
     private func setup() {
         normalState()
         delegate = self
-        setupAppearance()
     }
-    
 }
 
 extension TextField: UITextFieldDelegate {
