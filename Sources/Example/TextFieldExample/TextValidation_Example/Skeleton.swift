@@ -15,7 +15,7 @@ class Skeleton {
             )
         }
         
-        static var secondart: TextFieldConfiguration {
+        static var secondary: TextFieldConfiguration {
             return TextFieldConfiguration(
                 placeholder: "Custom Placeholder",
                 topLabel: "Custom Label",

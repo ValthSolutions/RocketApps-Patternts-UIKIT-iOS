@@ -202,8 +202,7 @@ private extension BaseButton {
         let label = UILabel()
         label.textColor = textColor?.color
         label.text = title
-        label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily,
-                              style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
+        label.applyTypography(fontProfile ?? FontProfile(style: .caption1Semibold))
         label.textAlignment = .center
         label.isUserInteractionEnabled = false
         
@@ -229,8 +228,7 @@ private extension BaseButton {
         let label = UILabel()
         label.textColor = textColor?.color
         label.text = title
-        label.applyTypography(fontFamily: fontProfile?.fontFamily ?? Typography.defaultFontFamily,
-                              style: fontProfile?.style ?? .body1Regular, text: label.text ?? "")
+        label.applyTypography(fontProfile ?? FontProfile(style: .caption1Regular))
         label.textAlignment = .center
         label.isUserInteractionEnabled = false
         

@@ -8,22 +8,25 @@ public extension TypographyButtonApplicable where Self: UIButton {
 }
 
 extension UITextField: TypographyTextFieldApplicable {
-    public func applyTypography(fontFamily: String, style: Typography.Style, text: String) -> NSAttributedString  {
-        let profile = FontProfile(fontFamily: fontFamily, style: style)
-        return Typography.attributedString(for: profile, text: text)
+    public func applyTypography(_ profile: FontProfile) {
+        self.font = Typography.font(for: profile)
+    }
+    
+    public func applyTypographyForPlaceholder(_ profile: FontProfile) {
+        guard let placeholderText = self.placeholder else { return }
+        let attributedPlaceholder = Typography.attributedString(for: profile, text: placeholderText)
+        self.attributedPlaceholder = attributedPlaceholder
     }
 }
 
  extension UILabel: TypographyApplicable {
-     public func applyTypography(fontFamily: String, style: Typography.Style, text: String) {
-        let profile = FontProfile(fontFamily: fontFamily, style: style)
-        self.attributedText = Typography.attributedString(for: profile, text: text)
+     public func applyTypography(_ profile: FontProfile) {
+         self.font = Typography.font(for: profile)
     }
 }
 
 extension UITextView: TypographyApplicable {
-    public func applyTypography(fontFamily: String, style: Typography.Style, text: String) {
-        let profile = FontProfile(fontFamily: fontFamily, style: style)
-        self.attributedText = Typography.attributedString(for: profile, text: text)
+    public func applyTypography(_ profile: FontProfile) {
+        self.font = Typography.font(for: profile)
     }
 }

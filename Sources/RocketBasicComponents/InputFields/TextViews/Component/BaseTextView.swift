@@ -4,7 +4,7 @@ import Styling
 open class BaseTextView: UITextView,
                          Decoratable {
     
-    public typealias Style = TextViewStyle
+    public typealias Style = InputFieldStyle
     
     open func decorate(with style: Style) {
         
@@ -31,9 +31,7 @@ open class BaseTextView: UITextView,
     
     private func configureTypography(with fontProfile: FontProfile?) {
         guard let fontProfile = fontProfile else { return }
-        self.applyTypography(fontFamily: fontProfile.fontFamily,
-                             style: fontProfile.style,
-                             text: self.text ?? "")
+        self.applyTypography(fontProfile)
     }
     
     private func applyEffects(_ effect: Effects?) {

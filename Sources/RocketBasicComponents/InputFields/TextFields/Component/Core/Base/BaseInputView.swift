@@ -36,7 +36,7 @@ open class BaseInputView: NiblessView {
     
     var topLabelColor: UIColor = .black
     var textColor: UIColor = .black
-    var currentStyle: TextViewStyle?
+    var currentStyle: InputFieldStyle?
     var heightConstraint: NSLayoutConstraint?
 
     // MARK: Initializers
@@ -85,32 +85,30 @@ open class BaseInputView: NiblessView {
         }
         
         topLabel.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(BaseInputViewConstants.topLabelHeight)
             make.leading.equalToSuperview().offset(BaseInputViewConstants.topLabelLeadingOffset)
-            make.top.equalTo(topAnchor).offset(-4)
+            make.top.equalTo(topAnchor)
         }
         
         baseIntputView.makeConstraints { make in
+            make.top.equalTo(topLabel.bottomAnchor)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
-            make.top.equalTo(topLabel.bottomAnchor).offset(2)
-            make.height.greaterThanOrEqualTo(BaseInputViewConstants.fieldHeight)
-            make.bottom.lessThanOrEqualTo(bottomAnchor)
+            make.height.equalTo(BaseInputViewConstants.fieldHeight)
         }
         
         errorLabel.makeConstraints { make in
+            make.top.equalTo(baseIntputView.bottomAnchor)
             make.leading.equalToSuperview().offset(BaseInputViewConstants.leadingOffset)
             make.trailing.equalToSuperview()
-            make.bottom.equalTo(bottomAnchor)
         }
     }
 }
 
 // MARK: - Decorator
 extension BaseInputView: Decoratable {
-    public typealias Style = TextViewStyle
+    public typealias Style = InputFieldStyle
     
-    public func decorate(with style: TextViewStyle) {
+    public func decorate(with style: InputFieldStyle) {
         setup()
         self.currentStyle = style
         self.topLabelColor = style.topLabelColor?.color ?? .black
@@ -121,6 +119,7 @@ extension BaseInputView: Decoratable {
         if let errorStyle = style.errorLabelStyle {
             self.errorLabel.decorate(with: errorStyle)
         }
+        applyTypographyToBaseInput()
     }
 }
 
@@ -186,6 +185,20 @@ extension BaseInputView: ValidationResultAdapter {
             showError(.noError)
         case .failure(let error):
             showError(.error(message: error.description))
+        }
+    }
+}
+
+// MARK: - Typography TextField Applicable
+extension BaseInputView {
+    func applyTypographyToBaseInput() {
+        guard let style = currentStyle, let fontProfile = style.fontProfile else { return }
+        
+        if let textView = baseIntputView as? UITextView {
+            textView.applyTypography(fontProfile)
+        } else if let textField = baseIntputView as? UITextField {
+            textField.applyTypography(fontProfile)
+            textField.applyTypographyForPlaceholder(fontProfile)
         }
     }
 }

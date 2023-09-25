@@ -8,7 +8,7 @@
 import UIKit
 
 public protocol TypographyApplicable {
-    func applyTypography(fontFamily: String, style: Typography.Style, text: String)
+    func applyTypography(_ profile: FontProfile)
 }
 
 public protocol TypographyButtonApplicable {
@@ -16,5 +16,6 @@ public protocol TypographyButtonApplicable {
 }
 
 public protocol TypographyTextFieldApplicable {
-    func applyTypography(fontFamily: String, style: Typography.Style, text: String) -> NSAttributedString
+    func applyTypography(_ profile: FontProfile) 
+    func applyTypographyForPlaceholder(_ profile: FontProfile)
 }

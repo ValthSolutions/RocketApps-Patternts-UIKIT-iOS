@@ -39,9 +39,7 @@ open class BaseLabel: UILabel,
     
     private func configureTypography(with fontProfile: FontProfile?) {
         guard let fontProfile = fontProfile else { return }
-        self.applyTypography(fontFamily: fontProfile.fontFamily,
-                             style: fontProfile.style,
-                             text: self.text ?? "")
+        self.applyTypography(fontProfile)
     }
     
     private func applyEffects(_ effect: Effects?) {

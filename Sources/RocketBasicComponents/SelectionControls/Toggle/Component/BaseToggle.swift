@@ -185,9 +185,7 @@ open class BaseToggle: UIControl, Decoratable {
                 self.labelOn.textColor = textColor
             }
             if let fontProfile = labelOnStyle.fontProfile {
-                self.labelOn.applyTypography(fontFamily: fontProfile.fontFamily,
-                                             style: fontProfile.style,
-                                             text: labelOn.text ?? "")
+                self.labelOn.applyTypography(fontProfile)
             }
             if let backgroundColor = labelOnStyle.backgroundColor?.color {
                 self.labelOn.backgroundColor = backgroundColor
@@ -199,9 +197,7 @@ open class BaseToggle: UIControl, Decoratable {
                 self.labelOff.textColor = textColor
             }
             if let fontProfile = labelOffStyle.fontProfile {
-                self.labelOff.applyTypography(fontFamily: fontProfile.fontFamily,
-                                              style: fontProfile.style,
-                                              text: labelOn.text ?? "")
+                self.labelOff.applyTypography(fontProfile)
             }
             if let backgroundColor = labelOffStyle.backgroundColor?.light {
                 self.labelOff.backgroundColor = backgroundColor

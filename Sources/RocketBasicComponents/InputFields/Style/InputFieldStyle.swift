@@ -8,8 +8,8 @@
 import Styling
 import UIKit
 
-/// A struct representing the styling attributes for a UITextView.
-open class TextViewStyle {
+/// A struct representing the styling attributes
+open class InputFieldStyle {
     
     /// The typography profile specifying the font attributes for the text view.
     /// Uses the `FontProfile` for defined font characteristics.
@@ -45,9 +45,10 @@ open class TextViewStyle {
     ///   - textColor: The color scheme for the text within the text view.
     ///   - effect: The visual effects to apply to the text view.
     ///   - placeholderColor: The color scheme for the placeholder text in the text view.
-    public init(fontProfile: FontProfile? = nil,
+    public init(fontProfile: FontProfile? = FontProfile(style: .caption1Regular),
                 backgroundColor: ColorScheme? = nil,
-                textColor: ColorScheme? = ColorScheme(light: .black, dark: .white),
+                textColor: ColorScheme? = ColorScheme(light: .black,
+                                                      dark: .white),
                 topLabelColor: ColorScheme? = ColorScheme(light: .black.withAlphaComponent(0.4), dark: .white.withAlphaComponent(0.4)),
                 effect: Effects? = nil,
                 placeholderColor: ColorScheme? = nil,
