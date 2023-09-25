@@ -38,3 +38,13 @@ open class LabelStyle {
         self.effect = effect
     }
 }
+
+extension LabelStyle {
+    public static var `default`: LabelStyle {
+        return LabelStyle(
+            fontProfile: FontProfile(style: .caption1Regular),
+            backgroundColor: .init(ColorScheme(light: .clear, dark: .clear)),
+            textColor: .init(ColorScheme(light: .black, dark: .white))
+        )
+    }
+}

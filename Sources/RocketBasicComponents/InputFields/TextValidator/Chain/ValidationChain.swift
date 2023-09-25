@@ -13,7 +13,7 @@ public class ValidationChain {
     
     public init(validators: [Validator],
                 validationType: ValidationType = .AND,
-                validationError: ValidationError = .emptyValue) {
+                validationError: ValidationError) {
         self.validators = validators
         self.validationType = validationType
         self.validationError = validationError

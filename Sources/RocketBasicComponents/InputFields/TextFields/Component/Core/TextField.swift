@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import Styling
 
 public protocol TextFieldNextDelegate: AnyObject {
     func textFieldShouldReturn(_ textField: TextField) -> Bool
@@ -15,7 +16,6 @@ public class TextField: UITextField {
     
     public var didFinishedEditingClosure: ((String?) -> Void)?
     
-    public var isPhone: Bool = false
     public let didEndEditingSubject = PassthroughSubject<Void, Never>()
     public weak var nextDelegate: TextFieldNextDelegate?
     
@@ -51,11 +51,8 @@ public class TextField: UITextField {
     
     public override func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
-        if isPhone {
-            return rect.insetBy(dx: 8.0, dy: 0.0)
-        } else {
-            return rect.insetBy(dx: 16.0, dy: 0.0)
-        }
+        return rect.insetBy(dx: 16.0, dy: 0.0)
+        
     }
     
     public override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
@@ -66,23 +63,26 @@ public class TextField: UITextField {
         return textRect(forBounds: bounds)
     }
     
-    public func setText(_ text: String?) {
+    open func setText(_ text: String?) {
         didEndEditingSubject.send(())
         self.text = text
-        NotificationCenter.default.post(name: UITextField.textDidEndEditingNotification, object: self)
     }
     
-    private func setup() {
-        normalState()
-        delegate = self
-        setupAppearance()
-    }
-    
-    func setupAppearance() {
+    open func setupAppearance() {
         backgroundColor = .clear
         layer.borderColor = UIColor.gray.cgColor
         layer.borderWidth = 1.0
         layer.cornerRadius = 4
+    }
+    
+    open func normalState() {
+        textColor = normalTextColor
+        layer.borderColor = normalBorderColor
+    }
+    
+    open func editingState() {
+        textColor = normalTextColor
+        layer.borderColor = editingBorderColor
     }
     
     private func updateUI() {
@@ -94,34 +94,31 @@ public class TextField: UITextField {
         }
     }
     
-    func normalState() {
-        textColor = normalTextColor
-        layer.borderColor = normalBorderColor
+    private func setup() {
+        normalState()
+        delegate = self
+        setupAppearance()
     }
     
-    func editingState() {
-        textColor = normalTextColor
-        layer.borderColor = editingBorderColor
-    }
 }
 
 extension TextField: UITextFieldDelegate {
-    public func textFieldDidBeginEditing(_ textField: UITextField) {
+    open func textFieldDidBeginEditing(_ textField: UITextField) {
         editingState()
     }
     
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+    open func textFieldDidEndEditing(_ textField: UITextField) {
         normalState()
         didEndEditingSubject.send(())
         didFinishedEditingClosure?(text)
     }
     
-    public func textField(_ textField: UITextField,
-                          shouldChangeCharactersIn range: NSRange,
-                          replacementString string: String) -> Bool {
+    open func textField(_ textField: UITextField,
+                        shouldChangeCharactersIn range: NSRange,
+                        replacementString string: String) -> Bool {
         guard isValidInput(in: range, replacement: string) else { return false }
         updateEditingState()
-        return !isPhone
+        return true
     }
     
     private func isValidInput(in range: NSRange, replacement string: String) -> Bool {

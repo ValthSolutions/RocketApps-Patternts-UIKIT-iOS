@@ -8,12 +8,11 @@ open class BaseInputView: NiblessView {
     
     // MARK: - Constants
     enum BaseInputViewConstants {
-        static let errorLabelHeight: CGFloat = 77
-        static let noErrorLabelHeight: CGFloat = 64
-        static let initialHeight: CGFloat = 64
+        static let initialHeight: CGFloat = 77
         static let topLabelHeight: CGFloat = 18
         static let fieldHeight: CGFloat = 44
-        static let leadingOffset: CGFloat = 16
+        static let leadingOffset: CGFloat = 8
+        static let topLabelLeadingOffset: CGFloat = 0
         static let errorDelta: CGFloat = 13
     }
     // MARK: - Validation Publishers
@@ -30,43 +29,34 @@ open class BaseInputView: NiblessView {
     
     var type: TextFieldConfiguration?
     
-    let errorLabel = Label(text: "",
-                                   textColor: .red,
-                           font: .systemFont(ofSize: 10),
-                                   alignment: .left)
-    let topLabel = Label(text: "",
-                                 textColor: UIColor.black.withAlphaComponent(0.4),
-                         font: .systemFont(ofSize: 10),
-                                 alignment: .left)
+    let errorLabel: BaseLabel = .init()
+    let topLabel: BaseLabel = .init()
+    
     var baseIntputView = UIView(frame: .zero)
     
     var topLabelColor: UIColor = .black
     var textColor: UIColor = .black
-    
+    var currentStyle: TextViewStyle?
     var heightConstraint: NSLayoutConstraint?
-    
+
     // MARK: Initializers
     
-    public init(type: TextFieldConfiguration,
-                textColor: UIColor = .black,
-                topLabelColor: UIColor = UIColor.black.withAlphaComponent(0.4),
+    public init(config: TextFieldConfiguration,
                 nextInput: TextFieldView? = nil) {
         
         super.init(frame: .zero)
         
         errorLabel.isHidden = true
         isUserInteractionEnabled = true
-        self.topLabelColor = topLabelColor
-        self.textColor = textColor
-        
-        self.type = type
-        setup(with: type, nextInput: nextInput)
+
+        self.type = config
+        setup(with: config, nextInput: nextInput)
         setup()
     }
     
     func setup() {
         topLabel.text = type?.topLabel ?? ""
-        topLabel.textColor = topLabelColor
+        errorLabel.text = type?.topLabel ?? ""
         setupConstraints()
     }
     
@@ -89,13 +79,15 @@ open class BaseInputView: NiblessView {
         addSubview(baseIntputView)
         
         makeConstraints { make in
-            heightConstraint = make.height.equalTo(BaseInputViewConstants.initialHeight)
+            heightConstraint = make.height.equalTo(
+                BaseInputViewConstants.initialHeight
+            )
         }
         
         topLabel.makeConstraints { make in
             make.height.greaterThanOrEqualTo(BaseInputViewConstants.topLabelHeight)
-            make.leading.equalToSuperview().offset(BaseInputViewConstants.leadingOffset)
-            make.top.equalTo(topAnchor)
+            make.leading.equalToSuperview().offset(BaseInputViewConstants.topLabelLeadingOffset)
+            make.top.equalTo(topAnchor).offset(-4)
         }
         
         baseIntputView.makeConstraints { make in
@@ -107,9 +99,27 @@ open class BaseInputView: NiblessView {
         }
         
         errorLabel.makeConstraints { make in
-            make.leading.equalTo(topLabel.leadingAnchor)
+            make.leading.equalToSuperview().offset(BaseInputViewConstants.leadingOffset)
             make.trailing.equalToSuperview()
             make.bottom.equalTo(bottomAnchor)
+        }
+    }
+}
+
+// MARK: - Decorator
+extension BaseInputView: Decoratable {
+    public typealias Style = TextViewStyle
+    
+    public func decorate(with style: TextViewStyle) {
+        setup()
+        self.currentStyle = style
+        self.topLabelColor = style.topLabelColor?.color ?? .black
+        self.textColor = style.textColor?.color ?? .black
+        if let topStyle = style.topLabelStyle {
+            self.topLabel.decorate(with: topStyle)
+        }
+        if let errorStyle = style.errorLabelStyle {
+            self.errorLabel.decorate(with: errorStyle)
         }
     }
 }
@@ -117,7 +127,6 @@ open class BaseInputView: NiblessView {
 // MARK: - Errors
 
 extension BaseInputView {
-    
     func crossfadeErrorLabel(to newMessage: String?, duration: TimeInterval) {
         let transition = CATransition()
         transition.type = .fade
@@ -126,28 +135,20 @@ extension BaseInputView {
         errorLabel.text = newMessage
     }
     
-    public func showError(_ state: ErrorState, animated: Bool = true) {
+    public func showError(_ state: ErrorState) {
         switch state {
-        case .error(let errorMessage, let delta):
+        case .error(let errorMessage):
+            if let style = currentStyle {
+                decorate(with: style)
+            }
             let isErrorLabelHidden = errorLabel.isHidden
-            crossfadeErrorLabel(to: errorMessage, duration: animated ? 0.1 : 0)
+            crossfadeErrorLabel(to: errorMessage,
+                                duration: 0.1)
             if isErrorLabelHidden {
                 errorLabel.isHidden = false
-                heightConstraint?.constant = BaseInputViewConstants.errorLabelHeight
-                delegate?.textFieldView(self, didChangeHeight: delta, animated: animated)
             }
-        case .noError(let delta):
+        case .noError:
             errorLabel.isHidden = true
-            heightConstraint?.constant = BaseInputViewConstants.noErrorLabelHeight
-            delegate?.textFieldView(self, didChangeHeight: delta, animated: animated)
-        }
-        
-        if animated {
-            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut) {
-                self.layoutIfNeeded()
-            }
-        } else {
-            layoutIfNeeded()
         }
     }
 }
@@ -182,9 +183,9 @@ extension BaseInputView: ValidationResultAdapter {
     public func applyValidationResult(_ validationResult: ValidationResult) {
         switch validationResult {
         case .success:
-            showError(.noError(delta: -BaseInputViewConstants.errorDelta))
+            showError(.noError)
         case .failure(let error):
-            showError(.error(message: error.description, delta: BaseInputViewConstants.errorDelta))
+            showError(.error(message: error.description))
         }
     }
 }

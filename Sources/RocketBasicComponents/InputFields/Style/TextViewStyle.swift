@@ -6,6 +6,7 @@
 //
 
 import Styling
+import UIKit
 
 /// A struct representing the styling attributes for a UITextView.
 open class TextViewStyle {
@@ -30,6 +31,12 @@ open class TextViewStyle {
     /// Utilizes the `ColorScheme` for light and dark mode adaptation.
     var placeholderColor: ColorScheme?
     
+    var topLabelColor: ColorScheme?
+    
+    var errorLabelStyle: LabelStyle?
+    
+    var topLabelStyle: LabelStyle?
+    
     /// Initializes a new `TextViewStyle` with the provided styling attributes.
     ///
     /// - Parameters:
@@ -40,10 +47,16 @@ open class TextViewStyle {
     ///   - placeholderColor: The color scheme for the placeholder text in the text view.
     public init(fontProfile: FontProfile? = nil,
                 backgroundColor: ColorScheme? = nil,
-                textColor: ColorScheme? = nil,
+                textColor: ColorScheme? = ColorScheme(light: .black, dark: .white),
+                topLabelColor: ColorScheme? = ColorScheme(light: .black.withAlphaComponent(0.4), dark: .white.withAlphaComponent(0.4)),
                 effect: Effects? = nil,
-                placeholderColor: ColorScheme? = nil
+                placeholderColor: ColorScheme? = nil,
+                errorLabelStyle: LabelStyle? = .default,
+                topLabelStyle: LabelStyle? = .default
+                
     ) {
+        self.errorLabelStyle = errorLabelStyle
+        self.topLabelStyle = topLabelStyle
         self.backgroundColor = backgroundColor
         self.fontProfile = fontProfile
         self.textColor = textColor

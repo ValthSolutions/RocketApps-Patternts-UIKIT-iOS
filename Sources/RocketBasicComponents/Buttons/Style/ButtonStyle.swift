@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 18.09.2023.
-//
-
 import UIKit
 import Styling
 /// Represents the visual and layout attributes for customizing a button's appearance.

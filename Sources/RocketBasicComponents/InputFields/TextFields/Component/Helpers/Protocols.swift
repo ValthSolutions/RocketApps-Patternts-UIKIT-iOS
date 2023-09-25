@@ -13,8 +13,8 @@ public protocol TitleIdble {
 }
 
 public enum ErrorState {
-    case error(message: String, delta: CGFloat)
-    case noError(delta: CGFloat)
+    case error(message: String)
+    case noError
 }
 
 // MARK: - BaseInputView
