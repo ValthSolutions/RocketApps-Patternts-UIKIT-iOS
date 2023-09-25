@@ -8,7 +8,6 @@ public struct TextFieldConfiguration {
     let keyboardType: UIKeyboardType
     let contentType: UITextContentType?
     let filter: String?
-    let needEyeSecure: Bool
     let needPhoneFormatter: Bool
     public let validationChain: ValidationChain
     
@@ -20,7 +19,6 @@ public struct TextFieldConfiguration {
         keyboardType: UIKeyboardType = .default,
         contentType: UITextContentType? = nil,
         filter: String? = nil,
-        needEyeSecure: Bool = false,
         needPhoneFormatter: Bool = false,
         validationChain: ValidationChain
     ) {
@@ -31,7 +29,6 @@ public struct TextFieldConfiguration {
         self.keyboardType = keyboardType
         self.contentType = contentType
         self.filter = filter
-        self.needEyeSecure = needEyeSecure
         self.needPhoneFormatter = needPhoneFormatter
         self.validationChain = validationChain
     }

@@ -100,11 +100,9 @@ extension TextFieldView {
     private func defaultSetup(_ config: TextFieldConfiguration) {
         inputTextField.setPlaceholder(config.placeholder, color: textColor)
         topLabel.text = config.topLabel
-        inputTextField.isSecureTextEntry = config.needEyeSecure
         inputTextField.autocapitalizationType = config.autocapitalizationType
         inputTextField.keyboardType = config.keyboardType
         inputTextField.textContentType = config.contentType
-        inputTextField.rightViewMode = config.needEyeSecure ? .always : .never
         baseIntputView = inputTextField
     }
 }

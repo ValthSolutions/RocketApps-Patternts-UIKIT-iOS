@@ -46,7 +46,10 @@ let package = Package(
             name: "RocketBasicComponents",
             dependencies: ["Styling",
                            .product(name: "LayoutKit", package: "iOS-layout")
-]),
+            ], resources: [
+                .process("NavigationController/Resources")
+            ]
+        ),
         .target(
             name: "RocketSolutions",
             dependencies: ["Styling"])
