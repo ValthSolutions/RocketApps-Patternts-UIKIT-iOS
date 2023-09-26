@@ -21,9 +21,6 @@ let package = Package(
         .library(
             name: "RocketBasicComponents",
             targets: ["RocketBasicComponents"]),
-        .library(
-            name: "RocketSolutions",
-            targets: ["RocketSolutions"])
     ],
     
     dependencies: [
@@ -37,8 +34,7 @@ let package = Package(
             name: "RocketComponents",
             dependencies: ["Styling",
                            "RocketNavigationComponents",
-                           "RocketBasicComponents",
-                           "RocketSolutions"]),
+                           "RocketBasicComponents"]),
         .target(
             name: "RocketNavigationComponents",
             dependencies: ["Styling"]),
@@ -50,8 +46,5 @@ let package = Package(
                 .process("NavigationController/Resources")
             ]
         ),
-        .target(
-            name: "RocketSolutions",
-            dependencies: ["Styling"])
     ]
 )
