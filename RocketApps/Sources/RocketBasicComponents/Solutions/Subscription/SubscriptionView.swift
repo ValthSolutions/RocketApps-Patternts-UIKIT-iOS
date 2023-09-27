@@ -4,7 +4,7 @@ public protocol LinkHandler: AnyObject {
     func handleLink(_ url: URL)
 }
 
-public class RegistrationFooterView: NiblessView {
+open class RegistrationFooterView: NiblessView {
     
     public var fontSize: CGFloat = 14
     private var textColor: UIColor
@@ -28,7 +28,7 @@ public class RegistrationFooterView: NiblessView {
         setup()
     }
     
-    private func setup() {
+    open func setup() {
         addSubview(textView)
         setupConstraints()
         observeLanguageChange()
@@ -37,7 +37,7 @@ public class RegistrationFooterView: NiblessView {
         textView.delegate = self
     }
     
-    public override func setupTitles() {
+    open override func setupTitles() {
         setupAttributedString()
         backgroundColor = .clear
     }
@@ -68,10 +68,10 @@ public class RegistrationFooterView: NiblessView {
                 .font: font
             ]
         }
-        let attributedString = NSMutableAttributedString(string: localized(L10n().terms_registering_to_oswisSolutions.key.description), attributes: regularAttributes)
-        attributedString.append(NSAttributedString(string: localized(L10n().terms_of_use.key.description), attributes: linkAttributes(termsOfUseURL)))
-        attributedString.append(NSAttributedString(string: localized(L10n().terms_and_our.key.description), attributes: regularAttributes))
-        attributedString.append(NSAttributedString(string: localized(L10n().terms_privacy_policy.key.description), attributes: linkAttributes(privacyPolicyURL)))
+        let attributedString = NSMutableAttributedString(string: "Terms", attributes: regularAttributes)
+        attributedString.append(NSAttributedString(string: "sss"), attributes: linkAttributes(termsOfUseURL)))
+        attributedString.append(NSAttributedString(string: "saf"), attributes: regularAttributes))
+        attributedString.append(NSAttributedString(string: "savac"), attributes: linkAttributes(privacyPolicyURL)))
         textView.attributedText = attributedString
         textView.tintColor = textColor.withAlphaComponent(0.6)
     }
