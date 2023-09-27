@@ -31,7 +31,7 @@ open class ButtonStyle {
     
     /// Specifies the position of icon relatively a text.
     var iconPosition: Position?
-
+    
     /// Initializes a new `ButtonStyle` with the specified attributes.
     ///
     /// - Parameters:
@@ -40,13 +40,14 @@ open class ButtonStyle {
     ///   - icon: An optional icon for the button.
     ///   - effect: Optional visual effects for the button.
     ///   - spacing: Optional spacing between the button's elements.
-    public init(type: ButtonStyleType,
-                fontProfile: FontProfile? = nil,
-                icon: UIImage? = nil,
-                iconPosition: Position? = nil,
-                effect: Effects? = nil,
-                spacing: Spacing? = nil,
-                textColor: ColorScheme? = ColorScheme(light: .black, dark: .white)
+    public init(
+        type: ButtonStyleType,
+        fontProfile: FontProfile? = nil,
+        icon: UIImage? = nil,
+        iconPosition: Position? = nil,
+        effect: Effects? = nil,
+        spacing: Spacing? = nil,
+        textColor: ColorScheme? = ColorScheme(light: .black, dark: .white)
     ) {
         self.type = type
         self.textColor = textColor
@@ -55,5 +56,15 @@ open class ButtonStyle {
         self.iconPosition = iconPosition
         self.effect = effect
         self.spacing = spacing
+    }
+}
+
+extension ButtonStyle {
+    public static var `default`: ButtonStyle {
+        return ButtonStyle(
+            type: .primary(defaultColor: .init()),
+            fontProfile: FontProfile(style: .caption1Regular),
+            textColor: ColorScheme(light: .black, dark: .white)
+        )
     }
 }
