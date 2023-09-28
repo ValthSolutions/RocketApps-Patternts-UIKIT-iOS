@@ -8,7 +8,7 @@ open class PaywallViewController: NiblessViewController, IPaywallViewController 
     
     // MARK: -  Properties
     
-    private var closeButton = BaseButton()
+    private var closeButton = BaseButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
     private var rootView: PaywallRootView?
     private var cancellables = Set<AnyCancellable>()
     
@@ -26,7 +26,9 @@ open class PaywallViewController: NiblessViewController, IPaywallViewController 
     enum ViewAction {
         case viewAllPlansButtonTapped
         case restorePurchases
+        case didPressCloseButton
         case navigateToWelcomeScreen
+        case navigateToPlanScreen
         case proceedWithPurchase
         case selectProduct(ApphudProduct)
         case fetchProductDetails
@@ -53,21 +55,31 @@ open class PaywallViewController: NiblessViewController, IPaywallViewController 
 extension PaywallViewController {
     private func setupCloseButton() {
         closeButton.decorate(with: Skeleton.ButtonStyles.close)
+        
+        closeButton.makeConstraints { make in
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .allEvents)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+    }
+    
+    @objc private func closeButtonTapped() {
+        viewStore.send(.didPressCloseButton)
     }
     
     private func subscribeToButtonTaps() {
         guard let rootView = rootView else { return }
         
         rootView.tryFreeButtonTapped
-            .sink { _ in
-                
+            .sink { [weak self] _ in
+                self?.viewStore.send(.navigateToPlanScreen)
             }
             .store(in: &cancellables)
         
         rootView.viewAllPlansButtonTapped
-            .sink { _ in
-
+            .sink { [weak self] _ in
+                self?.viewStore.send(.navigateToPlanScreen)
             }
             .store(in: &cancellables)
     }
@@ -76,6 +88,8 @@ extension PaywallViewController {
 extension SubscriptionDomain.Action {
   init(action: PaywallViewController.ViewAction) {
     switch action {
+    case .navigateToPlanScreen:
+        self = .navigateToPlanScreen
     case let .selectProduct(product):
       self = .selectProduct(product)
     case .proceedWithPurchase:
@@ -88,6 +102,8 @@ extension SubscriptionDomain.Action {
         self = .viewAllPlansButtonTapped
     case .fetchProductDetails:
         self = .fetchProductDetails
+    case .didPressCloseButton:
+        self = .didPressCloseButton
     }
   }
 }

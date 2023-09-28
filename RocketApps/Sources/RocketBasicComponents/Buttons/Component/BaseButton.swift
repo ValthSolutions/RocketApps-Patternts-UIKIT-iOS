@@ -247,6 +247,7 @@ private extension BaseButton {
     
     func createIconView(with icon: UIImage) -> UIImageView {
         let iconIV = UIImageView(image: icon)
+        iconIV.contentMode = .scaleAspectFit
         return iconIV
     }
     

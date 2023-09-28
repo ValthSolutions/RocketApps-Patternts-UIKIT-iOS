@@ -48,6 +48,7 @@ public struct SubscriptionDomain: ReducerProtocol {
         case restorePurchases
         case viewAllPlansButtonTapped
         case navigateToWelcomeScreen
+        case navigateToPlanScreen
         case links
         case teardown
         case fetchProductDetails
@@ -59,6 +60,8 @@ public struct SubscriptionDomain: ReducerProtocol {
     public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
+            case .navigateToPlanScreen:
+                return .none
             case .navigateToWelcomeScreen:
                 return .none
             case .viewAllPlansButtonTapped:
