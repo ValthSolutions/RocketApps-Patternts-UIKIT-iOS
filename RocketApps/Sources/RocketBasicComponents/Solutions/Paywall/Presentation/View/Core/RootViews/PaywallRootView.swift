@@ -18,7 +18,7 @@ open class PaywallRootView: NiblessView {
         return $0
     }(UIStackView())
     
-    private let scrollView: UIScrollView = {
+    private let hScrollView: UIScrollView = {
         $0.showsHorizontalScrollIndicator = false
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
@@ -29,6 +29,9 @@ open class PaywallRootView: NiblessView {
     private let autoRenewableLabel = BaseLabel()
     private let navigationView = CustomNavigationView()
     
+    let previewSubscriptionView = PreviewSubscriptionView(topText: "Annual",
+                                                          priceText: "$39.99",
+                                                          bottomText: "Free 7 days free trial. Billed yearly after free trial.")
     // MARK: - Init
     
     public init() {
@@ -38,7 +41,11 @@ open class PaywallRootView: NiblessView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        scrollView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 30, right: 16 + 30)
+        hScrollView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 30, right: 16 + 30)
+    }
+    
+    open func applyDecorations() {
+        
     }
 }
 
@@ -47,8 +54,8 @@ open class PaywallRootView: NiblessView {
 extension PaywallRootView {
     private func setupUI() {
         backgroundColor = .white
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.backgroundColor = .clear
+        hScrollView.showsVerticalScrollIndicator = false
+        hScrollView.backgroundColor = .clear
         setupHierarchy()
         setupConstraints()
         registrationFooterView.decorate(with: .init())
@@ -67,6 +74,8 @@ extension PaywallRootView {
         let viewAllPlansStyle = Skeleton.ButtonStyles.viewAllPlans
         viewAllPlansButton.setTitle(viewAllPlansStyle.0, for: .normal)
         viewAllPlansButton.decorate(with: viewAllPlansStyle.1)
+
+        previewSubscriptionView.decorate(with: .default)
         
         let views = [BenefitView(), BenefitView(), BenefitView(), BenefitView()]
         _ = views.map { benefitView in
@@ -85,10 +94,11 @@ extension PaywallRootView {
 
 extension PaywallRootView {
     private func setupHierarchy() {
-        addSubview(scrollView)
-        scrollView.addSubview(hStack)
+        addSubview(hScrollView)
+        hScrollView.addSubview(hStack)
         addSubview(registrationFooterView)
         addSubview(tryFreeButton)
+        addSubview(previewSubscriptionView)
         addSubview(viewAllPlansButton)
         addSubview(autoRenewableLabel)
         addSubview(navigationView)
@@ -99,6 +109,10 @@ extension PaywallRootView {
 
 extension PaywallRootView {
     private func setupConstraints() {
+        let spacer = UIView()
+        spacer.isUserInteractionEnabled = false
+        addSubview(spacer)
+
         navigationView.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalTo(leadingAnchor)
@@ -106,7 +120,7 @@ extension PaywallRootView {
             make.height.equalTo(heightAnchor, multiplier: 0.33)
         }
         
-        scrollView.makeConstraints { make in
+        hScrollView.makeConstraints { make in
             make.top.equalTo(navigationView.bottomAnchor)
             make.bottom.equalTo(viewAllPlansButton.topAnchor)
             make.leading.equalTo(leadingAnchor)
@@ -114,14 +128,27 @@ extension PaywallRootView {
         }
         
         hStack.makeConstraints { make in
-            make.top.equalTo(scrollView.topAnchor)
-            make.bottom.equalTo(scrollView.bottomAnchor)
-            make.leading.equalTo(scrollView.leadingAnchor)
-            make.trailing.equalTo(scrollView.trailingAnchor)
+            make.top.equalTo(hScrollView.topAnchor)
+            make.bottom.equalTo(hScrollView.bottomAnchor)
+            make.leading.equalTo(hScrollView.leadingAnchor)
+            make.trailing.equalTo(hScrollView.trailingAnchor)
+        }
+        
+        previewSubscriptionView.makeConstraints { make in
+            make.leading.equalTo(safeAreaLayoutGuide.leadingAnchor).offset(Constants.fieldStackViewLeadingOffset)
+            make.trailing.equalTo(safeAreaLayoutGuide.trailingAnchor).offset(Constants.fieldStackViewTrailingOffset)
+            make.top.equalTo(hStack.bottomAnchor).offset(24)
+        }
+        
+        spacer.makeConstraints { make in
+            make.top.equalTo(previewSubscriptionView.bottomAnchor)
+            make.bottom.equalTo(autoRenewableLabel.topAnchor)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
         }
         
         viewAllPlansButton.makeConstraints { make in
-            make.bottom.equalTo(autoRenewableLabel.bottomAnchor).offset(-38)
+            make.centerY.equalTo(spacer.centerYAnchor).offset(-10)
             make.centerX.equalTo(safeAreaLayoutGuide.centerXAnchor)
         }
         

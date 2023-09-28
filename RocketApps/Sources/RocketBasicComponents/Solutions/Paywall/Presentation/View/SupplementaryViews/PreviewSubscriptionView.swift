@@ -4,22 +4,28 @@ import Styling
 open class PreviewSubscriptionView: NiblessView,
                                     Decoratable {
     
-    public typealias Style = BenefitStyle
+    public typealias Style = SubscriptionStyle
     
-    private let imageView = UIImageView()
     private let topLabel = BaseLabel()
+    private let priceLabel = BaseLabel()
     private let bottomLabel = BaseLabel()
     
     private let containerView = UIView()
     
-    public init() {
+    public init(topText: String = "",
+                priceText: String = "",
+                bottomText: String = ""
+    ) {
+        self.topLabel.text = topText
+        self.priceLabel.text = priceText
+        self.bottomLabel.text = bottomText
         super.init(frame: .zero)
         setup()
     }
     
     private func setup() {
         setupContainer()
-        containerView.addSubview(imageView)
+        containerView.addSubview(priceLabel)
         containerView.addSubview(topLabel)
         containerView.addSubview(bottomLabel)
         setupConstraints()
@@ -31,9 +37,13 @@ open class PreviewSubscriptionView: NiblessView,
         containerView.setEdges()
     }
     
-    public func decorate(with style: BenefitStyle) {
+    public func decorate(with style: SubscriptionStyle) {
         if let topLabelStyle = style.topLabelStyle {
             topLabel.decorate(with: topLabelStyle)
+        }
+        
+        if let priceLabelStyle = style.priceLabelStyle {
+            priceLabel.decorate(with: priceLabelStyle)
         }
         
         if let bottomLabelStype = style.bottomLabelStyle {
@@ -43,28 +53,23 @@ open class PreviewSubscriptionView: NiblessView,
         if let effect = style.effect {
             applyEffects(effect)
         }
-        
-        topLabel.text = style.topText
-        bottomLabel.text = style.bottomText
-        imageView.image = style.icon
-        topLabel.numberOfLines = 0
     }
     
     private func setupConstraints() {
         makeConstraints { make in
-            make.height.greaterThanOrEqualTo(146)
-            make.width.equalTo(192)
-        }
-        
-        imageView.makeConstraints { make in
-            make.leading.equalTo(containerView.leadingAnchor).offset(12)
-            make.top.equalTo(containerView.topAnchor).offset(12)
-            make.bottom.equalTo(topLabel.topAnchor).offset(-12)
+            make.height.greaterThanOrEqualTo(100)
         }
         
         topLabel.makeConstraints { make in
+            make.top.equalTo(containerView.topAnchor).offset(12)
+            make.bottom.equalTo(priceLabel.topAnchor).offset(-4)
             make.leading.equalTo(containerView.leadingAnchor).offset(12)
             make.trailing.equalTo(containerView.trailingAnchor).offset(-12)
+        }
+        
+        priceLabel.makeConstraints { make in
+            make.leading.equalTo(containerView.leadingAnchor).offset(12)
+            make.bottom.equalTo(bottomLabel.topAnchor).offset(-12)
         }
         
         bottomLabel.makeConstraints { make in
