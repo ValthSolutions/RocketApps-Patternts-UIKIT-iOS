@@ -1,8 +1,8 @@
 import UIKit
 import Styling
 
-open class BenefitView: NiblessView,
-                        Decoratable {
+open class PreviewSubscriptionView: NiblessView,
+                                    Decoratable {
     
     public typealias Style = BenefitStyle
     

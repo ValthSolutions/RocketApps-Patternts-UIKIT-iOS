@@ -35,6 +35,11 @@ open class PaywallRootView: NiblessView {
         super.init(frame: .zero)
         setupUI()
     }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        scrollView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 30, right: 16 + 30)
+    }
 }
 
 // MARK: - Private
@@ -43,13 +48,14 @@ extension PaywallRootView {
     private func setupUI() {
         backgroundColor = .white
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.backgroundColor = .clear
         setupHierarchy()
         setupConstraints()
         registrationFooterView.decorate(with: .init())
         
         navigationView.setTitle("Get full access to Floro Premium")
         navigationView.decorate(with: .default)
-
+        
         let buttonStyles = Skeleton.ButtonStyles.primary
         tryFreeButton.setTitle(buttonStyles.0, for: .normal)
         tryFreeButton.decorate(with: buttonStyles.1)
@@ -63,9 +69,10 @@ extension PaywallRootView {
         viewAllPlansButton.decorate(with: viewAllPlansStyle.1)
         
         let views = [BenefitView(), BenefitView(), BenefitView(), BenefitView()]
-        _ = views.map {
-            $0.decorate(with: .default)
-            hStack.addArrangedSubview($0)
+        _ = views.map { benefitView in
+            hStack.addArrangedSubview(benefitView)
+            benefitView.translatesAutoresizingMaskIntoConstraints = false
+            benefitView.decorate(with: .default)
         }
     }
     
@@ -79,7 +86,7 @@ extension PaywallRootView {
 extension PaywallRootView {
     private func setupHierarchy() {
         addSubview(scrollView)
-         scrollView.addSubview(hStack)
+        scrollView.addSubview(hStack)
         addSubview(registrationFooterView)
         addSubview(tryFreeButton)
         addSubview(viewAllPlansButton)
@@ -100,7 +107,8 @@ extension PaywallRootView {
         }
         
         scrollView.makeConstraints { make in
-            make.top.equalTo(navigationView.bottomAnchor).offset(16)
+            make.top.equalTo(navigationView.bottomAnchor)
+            make.bottom.equalTo(viewAllPlansButton.topAnchor)
             make.leading.equalTo(leadingAnchor)
             make.trailing.equalTo(trailingAnchor)
         }
@@ -110,7 +118,6 @@ extension PaywallRootView {
             make.bottom.equalTo(scrollView.bottomAnchor)
             make.leading.equalTo(scrollView.leadingAnchor)
             make.trailing.equalTo(scrollView.trailingAnchor)
-            make.height.equalTo(scrollView.heightAnchor)
         }
         
         viewAllPlansButton.makeConstraints { make in
