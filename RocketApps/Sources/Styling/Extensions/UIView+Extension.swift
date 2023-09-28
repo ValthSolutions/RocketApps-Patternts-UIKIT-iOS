@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 public extension UIView {
     enum ShadowLevel {
@@ -60,5 +61,13 @@ public extension UIView {
             topAnchor.constraint(equalTo: superview.topAnchor),
             bottomAnchor.constraint(equalTo: superview.bottomAnchor)
         ])
+    }
+}
+
+public extension UIView {
+    func createButtonTapPublisher(for button: UIButton) -> AnyPublisher<Void, Never> {
+        button.publisher(for: .touchUpInside)
+            .map { _ in }
+            .eraseToAnyPublisher()
     }
 }

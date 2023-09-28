@@ -12,7 +12,7 @@ open class FooterStyle {
     
     public init(termsOfUseText: String? = "Terms of Use",
                 privacyPolicyText: String? = "Privacy Policy",
-                restorePurchaseText: String? = "Restore purchas",
+                restorePurchaseText: String? = "Restore purchase",
                 termsLabelStyle: LabelStyle? = .default,
                 privacyPolicyLabelStyle: LabelStyle? = .default,
                 restorePurchaseButtonStyle: ButtonStyle? = .default

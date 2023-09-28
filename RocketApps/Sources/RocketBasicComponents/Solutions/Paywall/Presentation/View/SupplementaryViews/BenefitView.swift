@@ -1,10 +1,10 @@
 import UIKit
 import Styling
 
-open class RegistrationFooterView: NiblessView,
-                                   Decoratable {
+open class BenefitView: NiblessView,
+                        Decoratable {
     
-    public typealias Style = FooterStyle
+    public typealias Style = BenefitStyle
     
     private let termsLabel = BaseLabel()
     private let privacyLabel = BaseLabel()
@@ -37,34 +37,8 @@ open class RegistrationFooterView: NiblessView,
         restorePurchaseButton.addTarget(self, action: #selector(restorePurchaseTapped), for: .touchUpInside)
     }
     
-    public func decorate(with style: FooterStyle) {
-        if let termsText = style.termsOfUseText {
-            termsLabel.text = termsText
-        }
+    public func decorate(with style: BenefitStyle) {
 
-        if let privacyText = style.privacyPolicyText {
-            privacyLabel.text = privacyText
-        }
-
-        if let restorePurchaseText = style.restorePurchaseText {
-            restorePurchaseButton.setTitle(restorePurchaseText, for: .normal)
-        }
-        
-        if let termsLabelStyle = style.termsLabelStyle {
-            termsLabel.decorate(with: termsLabelStyle)
-        }
-        
-        if let privacyPolicyLabelStyle = style.privacyPolicyLabelStyle {
-            privacyLabel.decorate(with: privacyPolicyLabelStyle)
-        }
-        
-        if let restorePurchaseButtonStyle = style.restorePurchaseButtonStyle {
-            if let font = restorePurchaseButtonStyle.fontProfile {
-                restorePurchaseButton.setTitleColor(restorePurchaseButtonStyle.textColor?.color, for: .normal)
-                restorePurchaseButton.setAttributedTitle(Typography.attributedString(for: font, text: restorePurchaseButton.titleLabel?.text ?? ""),
-                                                         for: .normal)
-            }
-        }
     }
     
     private func setupStackView() {

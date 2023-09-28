@@ -24,12 +24,16 @@ let package = Package(
     ],
     
     dependencies: [
-        .package(url: "git@github.com:Paletech/iOS-layout.git", branch: "develop")
+        .package(url: "git@github.com:Paletech/iOS-layout.git", branch: "develop"),
+        .package(url: "https://github.com/apphud/ApphudSDK", from: "3.0.0")
     ],
     
     targets: [
         .target(
-            name: "Styling"),
+            name: "Styling",
+            resources: [
+                .process("Resources")
+            ]),
         .target(
             name: "RocketComponents",
             dependencies: ["Styling",

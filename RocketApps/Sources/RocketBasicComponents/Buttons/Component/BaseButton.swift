@@ -183,78 +183,69 @@ private extension BaseButton {
                               fontProfile: FontProfile?,
                               spacing: Spacing?,
                               textColor: ColorScheme?,
-                              iconPosition: Position?
-    ) {
+                              iconPosition: Position?) {
         guard let icon = icon, stackView == nil else {
-            setupLabel(with: textColor, fontProfile: fontProfile)
+            self.setTitle(title, for: .normal)
+            if let fontProfile = fontProfile {
+                applyTypography(fontFamily: fontProfile.fontFamily,
+                                style: fontProfile.style,
+                                text: title ?? "")
+            }
+            if let textColor = textColor {
+                setTitleColor(textColor.color, for: .normal)
+            }
             return
         }
         
         let iconIV = createIconView(with: icon)
+        let textButton = UIButton()
+        textButton.setTitle(title, for: .normal)
+        textButton.isUserInteractionEnabled = false
+        if let fontProfile = fontProfile {
+            textButton.setAttributedTitle(Typography.attributedString(for: fontProfile,
+                                                                      text: self.titleLabel?.text ?? ""),
+                                          for: .normal)
+        }
+        if let textColor = textColor {
+            textButton.setTitleColor(textColor.color, for: .normal)
+        }
+
         configureAndAddStackView(with: iconIV,
-                                 textColor: textColor,
-                                 fontProfile: fontProfile,
+                                 textButton: textButton,
                                  spacing: spacing,
                                  iconPosition: iconPosition)
     }
     
-    func setupLabel(with textColor: ColorScheme?, fontProfile: FontProfile?) {
-        let label = UILabel()
-        label.textColor = textColor?.color
-        label.text = title
-        label.applyTypography(fontProfile ?? FontProfile(style: .caption1Semibold))
-        label.textAlignment = .center
-        label.isUserInteractionEnabled = false
-        
-        self.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ])
-    }
-    
-    func createIconView(with icon: UIImage) -> UIImageView {
-        let iconIV = UIImageView(image: icon)
-        return iconIV
-    }
-    
     func configureAndAddStackView(with iconIV: UIImageView,
-                                  textColor: ColorScheme?,
-                                  fontProfile: FontProfile?,
+                                  textButton: UIButton,
                                   spacing: Spacing?,
-                                  iconPosition: Position?
-    ) {
-        let label = UILabel()
-        label.textColor = textColor?.color
-        label.text = title
-        label.applyTypography(fontProfile ?? FontProfile(style: .caption1Regular))
-        label.textAlignment = .center
-        label.isUserInteractionEnabled = false
-        
+                                  iconPosition: Position?) {
+
         var arrangedSubviews: [UIView] = []
         
         if iconPosition == .left {
-            arrangedSubviews = [iconIV, label]
+            arrangedSubviews = [iconIV, textButton]
         } else if iconPosition == .right {
-            arrangedSubviews = [label, iconIV]
+            arrangedSubviews = [textButton, iconIV]
         }
         
         let hStack = UIStackView(arrangedSubviews: arrangedSubviews)
         hStack.spacing = spacing?.rawValue ?? Spacing.step3.rawValue
         hStack.alignment = .center
         hStack.axis = .horizontal
-        hStack.isUserInteractionEnabled = true
-        
+            
         self.addSubview(hStack)
         hStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            hStack.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            hStack.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-        ])
+        hStack.setEdges()
         hStack.isUserInteractionEnabled = false
         self.stackView = hStack
         self.iconImageView = iconIV
+    }
+    
+    
+    func createIconView(with icon: UIImage) -> UIImageView {
+        let iconIV = UIImageView(image: icon)
+        return iconIV
     }
     
     func updateState() {
@@ -290,8 +281,15 @@ private extension BaseButton {
     }
     
     func animateTransform(to transform: CGAffineTransform) {
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: [], animations: {
-            self.transform = transform
-        }, completion: nil)
+        UIView.animate(
+            withDuration: 0.4,
+            delay: 0,
+            usingSpringWithDamping: 0.5,
+            initialSpringVelocity: 3,
+            options: [.curveEaseInOut],
+            animations: {
+                self.transform = transform
+            }
+        )
     }
 }

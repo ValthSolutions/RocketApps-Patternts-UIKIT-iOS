@@ -11,7 +11,7 @@ public protocol TypographyApplicable {
     func applyTypography(_ profile: FontProfile)
 }
 
-public protocol TypographyButtonApplicable {
+public protocol TypographyButtonApplicable where Self: UIButton {
     func applyTypography(fontFamily: String, style: Typography.Style, text: String, forState state: UIControl.State)
 }
 
