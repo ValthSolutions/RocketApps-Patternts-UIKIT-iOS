@@ -25,7 +25,8 @@ let package = Package(
     
     dependencies: [
         .package(url: "git@github.com:Paletech/iOS-layout.git", branch: "develop"),
-        .package(url: "https://github.com/apphud/ApphudSDK", from: "3.0.0")
+        .package(url: "https://github.com/apphud/ApphudSDK", from: "3.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.55.0"),
     ],
     
     targets: [
@@ -45,6 +46,8 @@ let package = Package(
         .target(
             name: "RocketBasicComponents",
             dependencies: ["Styling",
+                           .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                           .product(name: "ApphudSDK", package: "ApphudSDK"),
                            .product(name: "LayoutKit", package: "iOS-layout")
             ], resources: [
                 .process("NavigationController/Resources")

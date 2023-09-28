@@ -227,6 +227,8 @@ private extension BaseButton {
             arrangedSubviews = [iconIV, textButton]
         } else if iconPosition == .right {
             arrangedSubviews = [textButton, iconIV]
+        } else {
+            arrangedSubviews = [iconIV]
         }
         
         let hStack = UIStackView(arrangedSubviews: arrangedSubviews)

@@ -2,7 +2,6 @@ import UIKit
 import Combine
 
 public protocol IPaywallViewController: UIViewController {
-    var output: IPaywallViewModel { get }
 }
 
 public protocol IPaywallViewModel {

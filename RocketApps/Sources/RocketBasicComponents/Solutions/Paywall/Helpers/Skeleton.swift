@@ -22,6 +22,17 @@ open class Skeleton {
             ))
         }
         
+        static var close: ButtonStyle {
+            return ButtonStyle(
+                type: .primary(
+                    defaultColor: ColorScheme(light: UIColor(red: 1, green: 1, blue: 1, alpha: 0.9),
+                                              dark: UIColor(red: 1, green: 1, blue: 1, alpha: 0.9))
+                ),
+                icon: UIImage(named: "x", in: StylingResource.bundle, compatibleWith: .current),
+                effect: Effects(rounded: true)
+            )
+        }
+        
         static var viewAllPlans: (String, ButtonStyle) {
             return ("View all plans",
                 ButtonStyle(

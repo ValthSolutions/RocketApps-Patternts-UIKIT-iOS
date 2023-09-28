@@ -1,6 +1,7 @@
 import UIKit
 
-class PaywallRouter {
+class PaywallRouter: Equatable {
+    
     private weak var navigationController: UINavigationController?
     
     init(navigationController: UINavigationController) {
@@ -10,5 +11,11 @@ class PaywallRouter {
     func routeToAllPlans() {
         let plansVC = UIViewController()
         navigationController?.pushViewController(plansVC, animated: true)
+    }
+}
+
+extension PaywallRouter {
+    static func == (lhs: PaywallRouter, rhs: PaywallRouter) -> Bool {
+        true
     }
 }
