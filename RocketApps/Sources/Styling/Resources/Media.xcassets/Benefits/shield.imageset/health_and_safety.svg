@@ -1,0 +1,15 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Material icons/health_and_safety" clip-path="url(#clip0_1134_28)">
+<path id="Vector" d="M0.5 39.5V0.5H39.5V39.5H0.5Z" stroke="white"/>
+<path id="Vector_2" d="M17.5 21.6667H13.3334V16.6667H17.5V12.5H22.5V16.6667H26.6667V21.6667H22.5V25.8334H17.5V21.6667ZM20 3.33337L6.66669 8.33337V18.4834C6.66669 26.9 12.35 34.75 20 36.6667C27.65 34.75 33.3334 26.9 33.3334 18.4834V8.33337L20 3.33337ZM30 18.4834C30 25.15 25.75 31.3167 20 33.2C14.25 31.3167 10 25.1667 10 18.4834V10.65L20 6.90004L30 10.65V18.4834Z" fill="url(#paint0_linear_1134_28)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_1134_28" x1="6.66669" y1="20" x2="33.3334" y2="20" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFD706"/>
+<stop offset="1" stop-color="#FF725F"/>
+</linearGradient>
+<clipPath id="clip0_1134_28">
+<rect width="40" height="40" fill="white"/>
+</clipPath>
+</defs>
+</svg>

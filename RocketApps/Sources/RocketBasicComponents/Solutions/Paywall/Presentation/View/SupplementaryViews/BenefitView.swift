@@ -6,13 +6,9 @@ open class BenefitView: NiblessView,
     
     public typealias Style = BenefitStyle
     
-    private let termsLabel = BaseLabel()
-    private let privacyLabel = BaseLabel()
-    private let restorePurchaseButton = UIButton()
-    
-    public var onTermsTapped: (() -> Void)?
-    public var onPrivacyTapped: (() -> Void)?
-    public var onRestorePurchaseTapped: (() -> Void)?
+    private let imageView = UIImageView()
+    private let topLabel = BaseLabel()
+    private let bottomLabel = BaseLabel()
     
     public init() {
         super.init(frame: .zero)
@@ -20,49 +16,70 @@ open class BenefitView: NiblessView,
     }
     
     private func setup() {
-        setupStackView()
-        termsLabel.text = "Terms"
-        termsLabel.textColor = .black
-        termsLabel.isUserInteractionEnabled = true
-        let termsTapGesture = UITapGestureRecognizer(target: self, action: #selector(termsTapped))
-        termsLabel.addGestureRecognizer(termsTapGesture)
-        
-        privacyLabel.text = "Privacy"
-        privacyLabel.textColor = .black
-        privacyLabel.isUserInteractionEnabled = true
-        let privacyTapGesture = UITapGestureRecognizer(target: self, action: #selector(privacyTapped))
-        privacyLabel.addGestureRecognizer(privacyTapGesture)
-        
-        restorePurchaseButton.setTitle("Restore to Purchase", for: .normal)
-        restorePurchaseButton.addTarget(self, action: #selector(restorePurchaseTapped), for: .touchUpInside)
+        [imageView, topLabel, bottomLabel].forEach { addSubview($0) }
+        setupConstraints()
+        backgroundColor = .gray
     }
     
     public func decorate(with style: BenefitStyle) {
-
-    }
-    
-    private func setupStackView() {
-        let stackView = UIStackView(arrangedSubviews: [termsLabel,
-                                                       privacyLabel,
-                                                       restorePurchaseButton])
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .fillEqually
-        addSubview(stackView)
+        if let topLabelStyle = style.topLabelStyle {
+            topLabel.decorate(with: topLabelStyle)
+        }
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.setEdges()
+        if let bottomLabelStype = style.bottomLabelStyle {
+            bottomLabel.decorate(with: bottomLabelStype)
+        }
+        
+        if let effect = style.effect {
+            applyEffects(effect)
+        }
+        
+        topLabel.text = style.topText
+        bottomLabel.text = style.bottomText
+        imageView.image = style.icon
+        topLabel.numberOfLines = 0
     }
     
-    @objc func termsTapped() {
-        onTermsTapped?()
+    private func setupConstraints() {
+        makeConstraints { make in
+            make.height.greaterThanOrEqualTo(146)
+            make.width.equalTo(192)
+        }
+        
+        imageView.makeConstraints { make in
+            make.leading.equalTo(leadingAnchor).offset(12)
+            make.top.equalTo(topAnchor).offset(12)
+            make.bottom.equalTo(topLabel.topAnchor).offset(-12)
+        }
+        
+        topLabel.makeConstraints { make in
+            make.leading.equalTo(leadingAnchor).offset(12)
+        }
+        
+        bottomLabel.makeConstraints { make in
+            make.leading.equalTo(leadingAnchor).offset(12)
+            make.bottom.equalTo(bottomAnchor).offset(-12)
+        }
     }
     
-    @objc func privacyTapped() {
-        onPrivacyTapped?()
+    private func applyEffects(_ effect: Effects?) {
+        applyShadow(effect?.shadow, cornerRadius: effect?.cornerRadius)
+        applyRoundedCorners(cornerRadius: effect?.cornerRadius)
     }
     
-    @objc func restorePurchaseTapped() {
-        onRestorePurchaseTapped?()
+    private func applyRoundedCorners(cornerRadius: CGFloat?) {
+        if let cornerRadius = cornerRadius {
+            self.layer.cornerRadius = cornerRadius
+        }
+    }
+    
+    private func applyShadow(_ shadow: Shadow?, cornerRadius: CGFloat?) {
+        guard let shadow = shadow else { return }
+        let shadowPath0 = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius ?? 0)
+        self.layer.shadowPath = shadowPath0.cgPath
+        self.layer.shadowColor = shadow.color.cgColor
+        self.layer.shadowOffset = shadow.offset
+        self.layer.shadowRadius = shadow.radius
+        self.layer.shadowOpacity = shadow.opacity
     }
 }

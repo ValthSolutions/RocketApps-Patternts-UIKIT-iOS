@@ -2,32 +2,26 @@ import UIKit
 import Styling
 
 open class BenefitStyle {
-    var fontProfile: FontProfile?
-    var textColor: ColorScheme?
     var icon: UIImage?
     var effect: Effects?
-    var backgroundColor: ColorScheme?
-    var spacing: Spacing?
     var topText: String?
     var bottomText: String?
+    var topLabelStyle: LabelStyle?
+    var bottomLabelStyle: LabelStyle?
     
     public init(
         topText: String? = nil,
         bottomText: String? = nil,
         icon: UIImage? = nil,
-        fontProfile: FontProfile? = nil,
-        backgroundColor: ColorScheme? = nil,
-        textColor: ColorScheme? = nil,
-        spacing: Spacing? = nil,
-        effect: Effects? = nil
+        effect: Effects? = nil,
+        topLabelStyle: LabelStyle? = nil,
+        bottomLabelStyle: LabelStyle? = nil
     ) {
         self.topText = topText
         self.bottomText = bottomText
         self.icon = icon
-        self.fontProfile = fontProfile
-        self.backgroundColor = backgroundColor
-        self.spacing = spacing
-        self.textColor = textColor
+        self.bottomLabelStyle = bottomLabelStyle
+        self.topLabelStyle = topLabelStyle
         self.effect = effect
     }
 }
@@ -35,9 +29,17 @@ open class BenefitStyle {
 extension BenefitStyle {
     public static var `default`: BenefitStyle {
         return BenefitStyle(
-            fontProfile: FontProfile(style: .caption1Regular),
-            backgroundColor: .init(ColorScheme(light: .clear, dark: .clear)),
-            textColor: .init(ColorScheme(light: .black, dark: .white))
+            topText: "Unlock the full Floro experience",
+            bottomText: "With full access",
+            icon: UIImage(named: "lock.open", in: StylingResource.bundle, with: .none),
+            effect: Effects(shadow: Shadow(color: .black,
+                                           offset: CGSize(width: 0, height: 0),
+                                           radius: 20,
+                                           opacity: 1.0)),
+            topLabelStyle: LabelStyle(fontProfile: FontProfile(style: .body1Regular),
+                                      textColor: ColorScheme(light: .black)),
+            bottomLabelStyle: LabelStyle(fontProfile: FontProfile(style: .caption1Regular),
+                                         textColor: ColorScheme(light: UIColor(red: 0.416, green: 0.424, blue: 0.455, alpha: 1)))
         )
     }
 }
