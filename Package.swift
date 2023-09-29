@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "RocketApps",
+    name: "RocketApps-Patternts-UIKIT-iOS",
     platforms: [
         .iOS(.v14)
     ],
