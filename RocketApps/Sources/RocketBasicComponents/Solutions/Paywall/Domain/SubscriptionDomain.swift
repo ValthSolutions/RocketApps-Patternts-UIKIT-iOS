@@ -61,8 +61,10 @@ public struct SubscriptionDomain: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .navigateToPlanScreen:
+                state.router.routeToAllPlans()
                 return .none
             case .navigateToWelcomeScreen:
+                state.router.routeToAllPlans()
                 return .none
             case .viewAllPlansButtonTapped:
                 return .none

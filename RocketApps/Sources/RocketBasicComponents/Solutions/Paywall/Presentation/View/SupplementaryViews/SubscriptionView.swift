@@ -1,7 +1,7 @@
 import UIKit
 import Styling
 
-open class PreviewSubscriptionView: NiblessView,
+open class SubscriptionView: NiblessView,
                                     Decoratable {
     
     public typealias Style = SubscriptionStyle

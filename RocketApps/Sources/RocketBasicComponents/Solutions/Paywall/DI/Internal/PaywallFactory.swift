@@ -8,7 +8,7 @@ class PaywallFactory {
     
     weak var router: PaywallRouter?
     private var cancellables: Set<AnyCancellable> = []
-    
+
     init(router: PaywallRouter) {
         self.router = router
         self.store = Store(initialState: SubscriptionDomain.State(router: router)) {
@@ -16,12 +16,13 @@ class PaywallFactory {
         }
     }
     
-    func buildPaywallModule() -> PaywallViewController {
-        self.store
-            .scope(state: /TicTacToe.State.newGame, action: TicTacToe.Action.newGame)
-            .ifLet { [weak self] newGameStore in
-                self?.setViewControllers([NewGameViewController(store: newGameStore)], animated: false)
-            }
-            .store(in: &self.cancellables)
+    func buildPaywallVC() -> PaywallViewController {
+        let viewController = PaywallViewController(store: store)
+        return viewController
+    }
+    
+    func buildPlansVC() -> PlansViewController {
+        let viewController = PlansViewController(store: store)
+        return viewController
     }
 }

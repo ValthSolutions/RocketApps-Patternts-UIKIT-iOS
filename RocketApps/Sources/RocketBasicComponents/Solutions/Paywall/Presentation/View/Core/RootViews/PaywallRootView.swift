@@ -29,7 +29,7 @@ open class PaywallRootView: NiblessView {
     private let autoRenewableLabel = BaseLabel()
     private let navigationView = CustomNavigationView()
     
-    let previewSubscriptionView = PreviewSubscriptionView(topText: "Annual",
+    let previewSubscriptionView = SubscriptionView(topText: "Annual",
                                                           priceText: "$39.99",
                                                           bottomText: "Free 7 days free trial. Billed yearly after free trial.")
     // MARK: - Init
@@ -63,7 +63,7 @@ extension PaywallRootView {
         navigationView.setTitle("Get full access to Floro Premium")
         navigationView.decorate(with: .default)
         
-        let buttonStyles = Skeleton.ButtonStyles.primary
+        let buttonStyles = Skeleton.ButtonStyles.tryFreeStyle
         tryFreeButton.setTitle(buttonStyles.0, for: .normal)
         tryFreeButton.decorate(with: buttonStyles.1)
         

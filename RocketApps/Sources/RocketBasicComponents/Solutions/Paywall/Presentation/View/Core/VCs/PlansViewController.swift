@@ -4,12 +4,11 @@ import Styling
 import ComposableArchitecture
 import ApphudSDK
 
-open class PaywallViewController: NiblessViewController {
+open class PlansViewController: NiblessViewController {
     
     // MARK: -  Properties
     
-    private var closeButton = BaseButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-    private var rootView: PaywallRootView?
+    private var rootView: PlansRootView?
     private var cancellables = Set<AnyCancellable>()
     
     let store: StoreOf<SubscriptionDomain>
@@ -40,29 +39,17 @@ open class PaywallViewController: NiblessViewController {
     }
     
     public override func loadView() {
-        rootView = PaywallRootView()
+        rootView = PlansRootView()
         view = rootView
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         subscribeToButtonTaps()
-        setupCloseButton()
-    }
-    
-    open func setupCloseButton() {
-        closeButton.decorate(with: Skeleton.ButtonStyles.close)
-        
-        closeButton.makeConstraints { make in
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .allEvents)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
     }
 }
 
-extension PaywallViewController {
+extension PlansViewController {
     
     @objc private func closeButtonTapped() {
         viewStore.send(.didPressCloseButton)
@@ -71,22 +58,16 @@ extension PaywallViewController {
     private func subscribeToButtonTaps() {
         guard let rootView = rootView else { return }
         
-        rootView.tryFreeButtonTapped
+        rootView.chooseButtonTapped
             .sink { [weak self] _ in
                 self?.viewStore.send(.proceedWithPurchase)
-            }
-            .store(in: &cancellables)
-        
-        rootView.viewAllPlansButtonTapped
-            .sink { [weak self] _ in
-                self?.viewStore.send(.navigateToPlanScreen)
             }
             .store(in: &cancellables)
     }
 }
 
 extension SubscriptionDomain.Action {
-  init(action: PaywallViewController.ViewAction) {
+  init(action: PlansViewController.ViewAction) {
     switch action {
     case .navigateToPlanScreen:
         self = .navigateToPlanScreen

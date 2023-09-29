@@ -5,7 +5,7 @@ open class Skeleton {
     
     // MARK: - Button Styles
     struct ButtonStyles {
-        static var primary: (String, ButtonStyle) {
+        static var tryFreeStyle: (String, ButtonStyle) {
             return ("Try free & Subscribe",
                 ButtonStyle(
                 type: .primary(
@@ -21,6 +21,24 @@ open class Skeleton {
                 textColor: ColorScheme(light: .white, dark: .white)
             ))
         }
+        
+        static var chooseStyle: (String, ButtonStyle) {
+            return ("Choose",
+                ButtonStyle(
+                type: .primary(
+                    defaultColor: ColorScheme(light: UIColor(red: 0.071, green: 0.717, blue: 0.416, alpha: 1),
+                                              dark: UIColor(red: 0.071, green: 0.717, blue: 0.416, alpha: 1))
+                ),
+                fontProfile: FontProfile(style: .body1Regular),
+                effect:
+                    Effects(cornerRadius: 12,
+                            hapticFeedback: .light,
+                            transformEffect: CGAffineTransform(scaleX: 0.95, y: 0.95)
+                           ),
+                textColor: ColorScheme(light: .white, dark: .white)
+            ))
+        }
+        
         
         static var close: ButtonStyle {
             return ButtonStyle(
@@ -55,6 +73,13 @@ open class Skeleton {
             return ("Auto-renewable. Cancel anytime",
             LabelStyle(
                 fontProfile: FontProfile(style: .caption1Regular),
+                textColor: .init(ColorScheme(light: .black, dark: .black))))
+        }
+        
+        static var chooseThePlan: (String, LabelStyle)  {
+            return ("Choose the plan",
+            LabelStyle(
+                fontProfile: FontProfile(style: .largeTitle),
                 textColor: .init(ColorScheme(light: .black, dark: .black))))
         }
     }

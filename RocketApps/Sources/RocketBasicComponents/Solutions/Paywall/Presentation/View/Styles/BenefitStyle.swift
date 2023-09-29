@@ -38,9 +38,16 @@ extension BenefitStyle {
                                            opacity: 1.0),
                             cornerRadius: 12),
             topLabelStyle: LabelStyle(fontProfile: FontProfile(style: .body1Regular),
-                                      textColor: ColorScheme(light: .black)),
+                                      textColor: ColorScheme(light: .black, dark: .black)),
             bottomLabelStyle: LabelStyle(fontProfile: FontProfile(style: .caption1Regular),
-                                         textColor: ColorScheme(light: UIColor(red: 0.416, green: 0.424, blue: 0.455, alpha: 1)))
+                                         textColor: ColorScheme(light: UIColor(red: 0.416,
+                                                                               green: 0.424,
+                                                                               blue: 0.455,
+                                                                               alpha: 1),
+                                                                dark: UIColor(red: 0.416,
+                                                                              green: 0.424,
+                                                                              blue: 0.455,
+                                                                              alpha: 1)))
         )
     }
 }

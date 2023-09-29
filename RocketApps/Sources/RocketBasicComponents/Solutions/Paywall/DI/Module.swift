@@ -9,11 +9,11 @@ import UIKit
 import ApphudSDK
 
 public struct Module {
-    public static func buildPaywallModule(navigationController: UINavigationController
-    ) -> IPaywallViewController {
+    public static func buildPaywallVC(navigationController: UINavigationController
+    ) -> PaywallViewController {
         let router = PaywallRouter(navigationController: navigationController)
         let factory = PaywallFactory(router: router)
-        let initialVC = factory.buildPaywallModule()
+        let initialVC = factory.buildPaywallVC()
         return initialVC
     }
     

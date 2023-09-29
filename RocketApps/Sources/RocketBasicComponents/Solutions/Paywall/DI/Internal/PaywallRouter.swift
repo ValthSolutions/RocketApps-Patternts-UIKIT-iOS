@@ -9,7 +9,8 @@ class PaywallRouter: Equatable {
     }
     
     func routeToAllPlans() {
-        let plansVC = UIViewController()
+        let factory = PaywallFactory(router: self)
+        let plansVC = factory.buildPlansVC()
         navigationController?.pushViewController(plansVC, animated: true)
     }
 }
