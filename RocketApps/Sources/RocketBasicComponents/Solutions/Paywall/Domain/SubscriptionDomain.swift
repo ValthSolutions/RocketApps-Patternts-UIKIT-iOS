@@ -15,7 +15,7 @@ public struct SubscriptionDomain: ReducerProtocol {
         var dataLoadingStatus = DataLoadingStatus.notStarted
         var isPurchaseInProgress: Bool = false
         var showRestoreFailedAlert = false
-        var subscriptionContext: SubscriptionContext = .regularSubscription
+        var subscriptionContext: SubscriptionContext = .onboarding
         var router: PaywallRouter
         
         var shouldShowError: Bool {

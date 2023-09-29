@@ -1,10 +1,14 @@
 import UIKit
 import Styling
+import Combine
+import ComposableArchitecture
 
 open class PaywallRootView: NiblessView {
     
     // MARK: - Properties
-    
+    private var cancellables = Set<AnyCancellable>()
+    private let viewStore: ViewStore<Redux.ViewState, Redux.ViewAction>
+
     private(set) lazy var tryFreeButton = BaseButton()
     private(set) lazy var tryFreeButtonTapped = createButtonTapPublisher(for: tryFreeButton)
     
@@ -25,16 +29,15 @@ open class PaywallRootView: NiblessView {
     }(UIScrollView())
     
     private let registrationFooterView = RegistrationFooterView()
-    
     private let autoRenewableLabel = BaseLabel()
     private let navigationView = CustomNavigationView()
+    private var subscriptionView = SubscriptionView(product: nil)
     
-    let previewSubscriptionView = SubscriptionView(topText: "Annual",
-                                                          priceText: "$39.99",
-                                                          bottomText: "Free 7 days free trial. Billed yearly after free trial.")
     // MARK: - Init
     
-    public init() {
+    public init(viewStore: ViewStore<Redux.ViewState, Redux.ViewAction>
+    ) {
+        self.viewStore = viewStore
         super.init(frame: .zero)
         setupUI()
     }
@@ -52,7 +55,18 @@ open class PaywallRootView: NiblessView {
 // MARK: - Private
 
 extension PaywallRootView {
+    private func setupSubView() {
+        viewStore.publisher.dataLoadingStatus.sink { [weak self] status in
+            guard let self else { return }
+            if status == .success {
+                let product = viewStore.state.productDetails.first
+                subscriptionView.product = product
+            }
+        }.store(in: &cancellables)
+    }
+    
     private func setupUI() {
+        setupSubView()
         backgroundColor = .white
         hScrollView.showsVerticalScrollIndicator = false
         hScrollView.backgroundColor = .clear
@@ -74,8 +88,8 @@ extension PaywallRootView {
         let viewAllPlansStyle = Skeleton.ButtonStyles.viewAllPlans
         viewAllPlansButton.setTitle(viewAllPlansStyle.0, for: .normal)
         viewAllPlansButton.decorate(with: viewAllPlansStyle.1)
-
-        previewSubscriptionView.decorate(with: .default)
+        
+        subscriptionView.decorate(with: .default)
         
         let views = [BenefitView(), BenefitView(), BenefitView(), BenefitView()]
         _ = views.map { benefitView in
@@ -98,7 +112,7 @@ extension PaywallRootView {
         hScrollView.addSubview(hStack)
         addSubview(registrationFooterView)
         addSubview(tryFreeButton)
-        addSubview(previewSubscriptionView)
+        addSubview(subscriptionView)
         addSubview(viewAllPlansButton)
         addSubview(autoRenewableLabel)
         addSubview(navigationView)
@@ -112,7 +126,7 @@ extension PaywallRootView {
         let spacer = UIView()
         spacer.isUserInteractionEnabled = false
         addSubview(spacer)
-
+        
         navigationView.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalTo(leadingAnchor)
@@ -134,14 +148,14 @@ extension PaywallRootView {
             make.trailing.equalTo(hScrollView.trailingAnchor)
         }
         
-        previewSubscriptionView.makeConstraints { make in
+        subscriptionView.makeConstraints { make in
             make.leading.equalTo(safeAreaLayoutGuide.leadingAnchor).offset(Constants.fieldStackViewLeadingOffset)
             make.trailing.equalTo(safeAreaLayoutGuide.trailingAnchor).offset(Constants.fieldStackViewTrailingOffset)
             make.top.equalTo(hStack.bottomAnchor).offset(24)
         }
         
         spacer.makeConstraints { make in
-            make.top.equalTo(previewSubscriptionView.bottomAnchor)
+            make.top.equalTo(subscriptionView.bottomAnchor)
             make.bottom.equalTo(autoRenewableLabel.topAnchor)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()

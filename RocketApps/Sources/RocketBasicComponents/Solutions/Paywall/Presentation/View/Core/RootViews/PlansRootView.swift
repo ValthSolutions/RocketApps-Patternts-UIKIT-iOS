@@ -1,13 +1,18 @@
 import UIKit
 import Styling
+import ComposableArchitecture
+import Combine
+import Foundation
 
 open class PlansRootView: NiblessView {
     
     // MARK: - Properties
-    
+    private var cancellables = Set<AnyCancellable>()
+
     private(set) lazy var chooseButton = BaseButton()
     private(set) lazy var chooseButtonTapped = createButtonTapPublisher(for: chooseButton)
-    
+    private let viewStore: ViewStore<Redux.ViewState, Redux.ViewAction>
+
     private(set) lazy var vStack: UIStackView = {
         $0.spacing = Spacing.step5.rawValue
         $0.alignment = .center
@@ -21,9 +26,12 @@ open class PlansRootView: NiblessView {
 
     // MARK: - Init
     
-    public init() {
+    public init(viewStore: ViewStore<Redux.ViewState, Redux.ViewAction>
+    ) {
+        self.viewStore = viewStore
         super.init(frame: .zero)
         setupUI()
+        viewStore.send(.fetchProductDetails)
     }
 }
 
@@ -34,6 +42,7 @@ extension PlansRootView {
         backgroundColor = .white
         setupHierarchy()
         setupConstraints()
+        setupSubView()
         registrationFooterView.decorate(with: .init())
         
         let buttonStyles = Skeleton.ButtonStyles.chooseStyle
@@ -57,27 +66,33 @@ extension PlansRootView {
 // MARK: - Hierarchy
 
 extension PlansRootView {
+    private func setupSubView() {
+        viewStore.publisher.dataLoadingStatus.sink { [weak self] status in
+            guard let self = self else { return }
+            if status == .notStarted {
+                viewStore.publisher.productDetails
+                    .receive(on: DispatchQueue.main)
+                    .sink { productStore in
+                        productStore.forEach { product in
+                            let subView = SubscriptionView(product: product)
+                            subView.decorate(with: .default)
+                            self.vStack.addArrangedSubview(subView)
+                            subView.makeConstraints { make in
+                                make.leading.equalTo(self.leadingAnchor).offset(16)
+                                make.trailing.equalTo(self.trailingAnchor).offset(-16)
+                            }
+                        }
+                    }.store(in: &cancellables)
+            }
+        }.store(in: &cancellables)
+    }
+    
     private func setupHierarchy() {
         addSubview(vStack)
         addSubview(registrationFooterView)
         addSubview(chooseButton)
         addSubview(chooseThePlanLabel)
         addSubview(cancelAnyTimeLabel)
-
-        //TEST
-        let previewSubscriptionViews: [SubscriptionView] = [
-            SubscriptionView(topText: "Annual", priceText: "$39.99", bottomText: "Free 7 days free trial. Billed yearly after free trial."),
-            SubscriptionView(topText: "Annual", priceText: "$39.99", bottomText: "Free 7 days free trial. Billed yearly after free trial."),
-            SubscriptionView(topText: "Annual", priceText: "$39.99", bottomText: "Free 7 days free trial. Billed yearly after free trial.")
-        ]
-        previewSubscriptionViews.forEach {
-            $0.decorate(with: .default)
-            vStack.addArrangedSubview($0)
-            $0.makeConstraints { make in
-                make.leading.equalTo(leadingAnchor).offset(16)
-                make.trailing.equalTo(trailingAnchor).offset(-16)
-            }
-        }
     }
 }
 
@@ -85,7 +100,6 @@ extension PlansRootView {
 
 extension PlansRootView {
     private func setupConstraints() {
-        
         
         chooseThePlanLabel.makeConstraints { make in
             make.bottom.equalTo(cancelAnyTimeLabel.topAnchor).offset(-12)

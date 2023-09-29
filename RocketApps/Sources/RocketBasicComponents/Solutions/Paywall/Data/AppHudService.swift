@@ -105,6 +105,6 @@ struct AppHudService: IAppHudService {
 
 private extension AppHudService {
     enum Constants {
-        static let paywallID = "premium_content"
+        static let paywallID = "bettingtip_premium_content"
     }
 }

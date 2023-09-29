@@ -17,7 +17,7 @@ public struct Module {
         return initialVC
     }
     
-    func initializeApphud(with apiKey: String, userID: String? = "") {
+    public static func initializeApphud(with apiKey: String, userID: String? = "") {
         DispatchQueue.main.async {
             Apphud.enableDebugLogs()
             Apphud.start(apiKey: apiKey, userID: userID)
