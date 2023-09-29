@@ -80,15 +80,15 @@ open class RegistrationFooterView: NiblessView,
         stackView.setEdges()
     }
     
-    @objc func termsTapped() {
+    @objc private func termsTapped() {
         onTermsTapped?()
     }
     
-    @objc func privacyTapped() {
+    @objc private func privacyTapped() {
         onPrivacyTapped?()
     }
     
-    @objc func restorePurchaseTapped() {
+    @objc private func restorePurchaseTapped() {
         onRestorePurchaseTapped?()
     }
 }

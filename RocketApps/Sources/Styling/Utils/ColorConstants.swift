@@ -14,7 +14,7 @@ public struct ColorConstants {
                                                  dark: UIColor(red: 0.8, green: 0.81, blue: 0.82, alpha: 1))
     public static let defaultThumbTintColor = ColorScheme(light: .white, dark: .white)
     
-    public static let defaultSelectedColor = ColorScheme(light: .cyan, dark: .cyan)
+    public static let defaultSelectedColor = ColorScheme(light: .green, dark: .green)
     
     public static let defaultUnselectedColor = ColorScheme(light: .lightGray, dark: .lightGray)
 }

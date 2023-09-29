@@ -30,6 +30,8 @@ open class PaywallViewController: NiblessViewController {
         subscribeToButtonTaps()
         setupCloseButton()
         viewStore.send(.fetchProductDetails)
+        handleRestoreTap()
+        handleAlert()
     }
     
     open func setupCloseButton() {
@@ -42,6 +44,24 @@ open class PaywallViewController: NiblessViewController {
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .allEvents)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
     }
+    
+    open func handlePrivacyTap(completion: @escaping () -> Void) {
+        rootView?.footerView.onPrivacyTapped = {
+            completion()
+        }
+    }
+    
+    open func handleTermsTap(completion: @escaping () -> Void) {
+        rootView?.footerView.onTermsTapped = {
+            completion()
+        }
+    }
+    
+    private func handleRestoreTap() {
+        rootView?.footerView.onRestorePurchaseTapped = { [weak self] in
+            self?.viewStore.send(.restorePurchases)
+        }
+    }
 }
 
 extension PaywallViewController {
@@ -49,7 +69,7 @@ extension PaywallViewController {
     @objc private func closeButtonTapped() {
         viewStore.send(.didPressCloseButton)
     }
-    
+        
     private func subscribeToButtonTaps() {
         guard let rootView = rootView else { return }
         
@@ -64,5 +84,23 @@ extension PaywallViewController {
                 self?.viewStore.send(.navigateToPlanScreen)
             }
             .store(in: &cancellables)
+    }
+}
+
+extension PaywallViewController: Alertable {
+    private func handleAlert() {
+        viewStore
+            .publisher
+            .showRestoreFailedAlert
+            .subscribe(on: DispatchQueue.main)
+            .sink { [weak self] showRestoreFailedAlert in
+                guard let strongSelf = self else { return }
+                if let shouldShow = showRestoreFailedAlert, shouldShow {
+                    strongSelf.showAlert(title: "Error",
+                                         subtitle: "No subscriptions to restore") { [weak self] in
+                        self?.viewStore.send(.tearDown)
+                    }
+                }
+            }.store(in: &cancellables)
     }
 }

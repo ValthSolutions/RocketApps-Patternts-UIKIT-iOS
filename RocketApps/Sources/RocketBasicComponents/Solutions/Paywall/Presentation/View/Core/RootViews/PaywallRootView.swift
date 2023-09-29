@@ -28,7 +28,7 @@ open class PaywallRootView: NiblessView {
         return $0
     }(UIScrollView())
     
-    private let registrationFooterView = RegistrationFooterView()
+    public let footerView = RegistrationFooterView()
     private let autoRenewableLabel = BaseLabel()
     private let navigationView = CustomNavigationView()
     private var subscriptionView = SubscriptionView(product: nil)
@@ -72,7 +72,7 @@ extension PaywallRootView {
         hScrollView.backgroundColor = .clear
         setupHierarchy()
         setupConstraints()
-        registrationFooterView.decorate(with: .init())
+        footerView.decorate(with: .init())
         
         navigationView.setTitle("Get full access to Floro Premium")
         navigationView.decorate(with: .default)
@@ -89,7 +89,7 @@ extension PaywallRootView {
         viewAllPlansButton.setTitle(viewAllPlansStyle.0, for: .normal)
         viewAllPlansButton.decorate(with: viewAllPlansStyle.1)
         
-        subscriptionView.decorate(with: .default)
+        subscriptionView.decorate(with: Skeleton.SubscriptionStyles.radioWithout)
         
         let views = [BenefitView(), BenefitView(), BenefitView(), BenefitView()]
         _ = views.map { benefitView in
@@ -110,7 +110,7 @@ extension PaywallRootView {
     private func setupHierarchy() {
         addSubview(hScrollView)
         hScrollView.addSubview(hStack)
-        addSubview(registrationFooterView)
+        addSubview(footerView)
         addSubview(tryFreeButton)
         addSubview(subscriptionView)
         addSubview(viewAllPlansButton)
@@ -172,13 +172,13 @@ extension PaywallRootView {
         }
         
         tryFreeButton.makeConstraints { make in
-            make.bottom.equalTo(registrationFooterView.topAnchor).offset(Constants.tryFreeButtonBottomOffset)
+            make.bottom.equalTo(footerView.topAnchor).offset(Constants.tryFreeButtonBottomOffset)
             make.leading.equalTo(safeAreaLayoutGuide.leadingAnchor).offset(Constants.fieldStackViewLeadingOffset)
             make.trailing.equalTo(safeAreaLayoutGuide.trailingAnchor).offset(Constants.fieldStackViewTrailingOffset)
             make.height.equalTo(Constants.tryFreeButtonHeight)
         }
         
-        registrationFooterView.makeConstraints { make in
+        footerView.makeConstraints { make in
             make.bottom.equalTo(safeAreaLayoutGuide.bottomAnchor)
             make.centerX.equalTo(centerXAnchor)
         }

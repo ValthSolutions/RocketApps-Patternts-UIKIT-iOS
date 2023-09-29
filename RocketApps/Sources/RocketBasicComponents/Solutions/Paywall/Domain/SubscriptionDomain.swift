@@ -73,6 +73,7 @@ public struct SubscriptionDomain: ReducerProtocol {
                 state.isPurchaseInProgress = false
                 return .none
             case .teardown:
+                state.showRestoreFailedAlert = false
                 return .merge(.cancel(id: CancelID.allCases))
             case .didPressCloseButton:
                 state.showRestoreFailedAlert = false

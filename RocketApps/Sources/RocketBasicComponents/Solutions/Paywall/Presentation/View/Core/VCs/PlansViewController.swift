@@ -3,6 +3,7 @@ import Combine
 import Styling
 import ComposableArchitecture
 import ApphudSDK
+import Foundation
 
 open class PlansViewController: NiblessViewController {
     
@@ -28,6 +29,26 @@ open class PlansViewController: NiblessViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         subscribeToButtonTaps()
+        handleRestoreTap()
+        handleAlert()
+    }
+    
+    open func handlePrivacyTap(completion: @escaping () -> Void) {
+        rootView?.footerView.onPrivacyTapped = {
+            completion()
+        }
+    }
+    
+    open func handleTermsTap(completion: @escaping () -> Void) {
+        rootView?.footerView.onTermsTapped = {
+            completion()
+        }
+    }
+    
+    private func handleRestoreTap() {
+        rootView?.footerView.onRestorePurchaseTapped = { [weak self] in
+            self?.viewStore.send(.restorePurchases)
+        }
     }
 }
 
@@ -40,5 +61,23 @@ extension PlansViewController {
                 self?.viewStore.send(.proceedWithPurchase)
             }
             .store(in: &cancellables)
+    }
+}
+
+extension PlansViewController: Alertable {
+    private func handleAlert() {
+        viewStore
+            .publisher
+            .showRestoreFailedAlert
+            .subscribe(on: DispatchQueue.main)
+            .sink { [weak self] showRestoreFailedAlert in
+                guard let strongSelf = self else { return }
+                if let shouldShow = showRestoreFailedAlert, shouldShow {
+                    strongSelf.showAlert(title: "Error",
+                                         subtitle: "No subscriptions to restore") { [weak self] in
+                        self?.viewStore.send(.tearDown)
+                    }
+                }
+            }.store(in: &cancellables)
     }
 }

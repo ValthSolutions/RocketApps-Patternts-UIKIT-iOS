@@ -6,6 +6,10 @@ open class SubscriptionView: NiblessView,
                              Decoratable {
     
     public typealias Style = SubscriptionStyle
+    public typealias ProductSelectionCallback = () -> Void
+    
+    public let radioButton = BaseRadioButton()
+    public var onTap: ProductSelectionCallback?
     
     public var product: ApphudProduct? {
         didSet {
@@ -13,18 +17,33 @@ open class SubscriptionView: NiblessView,
         }
     }
     
+    public var isSelected: Bool = false {
+        didSet {
+            updateBorderAppearance()
+            radioButton.isSelected = isSelected
+        }
+    }
+    
     private let containerView = UIView()
     private let topLabel = BaseLabel()
     private let priceLabel = BaseLabel()
     private let bottomLabel = BaseLabel()
-    private let radioButton = BaseRadioButton()
+    private var currentStyle: Style?
     
-    public init(product: ApphudProduct? = nil
-    ) {
+    public init(product: ApphudProduct? = nil) {
         self.product = product
         super.init(frame: .zero)
         setup()
         updateLabels()
+    }
+    
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        containerView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func handleTap() {
+        onTap?()
     }
     
     private func setup() {
@@ -34,6 +53,9 @@ open class SubscriptionView: NiblessView,
         containerView.addSubview(bottomLabel)
         containerView.addSubview(radioButton)
         setupConstraints()
+        setupTapGesture()
+        updateBorderAppearance()
+        radioButton.isUserInteractionEnabled = false
     }
     
     private func updateLabels() {
@@ -50,7 +72,8 @@ open class SubscriptionView: NiblessView,
     }
     
     public func decorate(with style: SubscriptionStyle) {
-        radioButton.decorate(with: .init())
+        self.currentStyle = style
+        
         if let topLabelStyle = style.topLabelStyle {
             topLabel.decorate(with: topLabelStyle)
         }
@@ -66,6 +89,14 @@ open class SubscriptionView: NiblessView,
         if let effect = style.effect {
             applyEffects(effect)
         }
+        
+        if let radioStyle = style.radioButtonStyle {
+            radioButton.decorate(with: radioStyle)
+        }
+        
+        if let isHidden = style.withRadioButton {
+            radioButton.isHidden = !isHidden
+        }
     }
     
     private func setupConstraints() {
@@ -76,7 +107,7 @@ open class SubscriptionView: NiblessView,
         radioButton.makeConstraints { make in
             make.centerY.equalTo(containerView.centerYAnchor)
             make.trailing.equalTo(containerView.trailingAnchor).offset(-12)
-            make.width.equalTo(24)
+            make.height.equalTo(24)
             make.width.equalTo(24)
         }
         
@@ -116,5 +147,15 @@ open class SubscriptionView: NiblessView,
         containerView.layer.shadowOffset = shadow.offset
         containerView.layer.shadowRadius = shadow.radius
         containerView.layer.shadowOpacity = shadow.opacity
+    }
+    
+    private func updateBorderAppearance() {
+        if isSelected {
+            containerView.layer.borderWidth = 1.0
+            containerView.layer.borderColor = currentStyle?.borderColor?.color.cgColor
+        } else {
+            containerView.layer.borderWidth = 0
+            containerView.layer.borderColor = nil
+        }
     }
 }

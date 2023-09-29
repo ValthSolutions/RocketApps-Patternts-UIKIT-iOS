@@ -14,16 +14,21 @@ public struct Redux {
         let isPurchaseInFlight: Bool
         let productDetails: [ApphudProduct]
         let dataLoadingStatus: DataLoadingStatus
-        
+        let selectedProduct: ApphudProduct?
+        let showRestoreFailedAlert: Bool?
+
         public init(state: SubscriptionDomain.State) {
+            self.showRestoreFailedAlert = state.showRestoreFailedAlert
             self.isButtonEnabled = !state.productDetails.isEmpty && !state.productDetails.isEmpty
             self.isPurchaseInFlight = state.isPurchaseInProgress
             self.productDetails = state.productDetails
+            self.selectedProduct = state.selectedProduct
             self.dataLoadingStatus = state.dataLoadingStatus
         }
     }
     
     public enum ViewAction {
+        case tearDown
         case viewAllPlansButtonTapped
         case restorePurchases
         case didPressCloseButton
@@ -37,6 +42,8 @@ public struct Redux {
 extension SubscriptionDomain.Action {
   init(action: Redux.ViewAction) {
     switch action {
+    case .tearDown:
+        self = .teardown
     case .navigateToPlanScreen:
         self = .navigateToPlanScreen
     case let .selectProduct(product):

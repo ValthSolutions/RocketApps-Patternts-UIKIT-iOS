@@ -6,13 +6,22 @@ open class SubscriptionStyle {
     var topLabelStyle: LabelStyle?
     var bottomLabelStyle: LabelStyle?
     var priceLabelStyle: LabelStyle?
+    var withRadioButton: Bool?
+    var radioButtonStyle: RadioButtonStyle?
+    var borderColor: ColorScheme?
     
     public init(
         topLabelStyle: LabelStyle? = nil,
         priceLabelStyle: LabelStyle? = nil,
         bottomLabelStyle: LabelStyle? = nil,
-        effect: Effects? = nil
+        effect: Effects? = nil,
+        withRadioButton: Bool? = true,
+        radioButtonStyle: RadioButtonStyle? = .init(),
+        borderColor: ColorScheme? = ColorConstants.defaultSelectedColor
     ) {
+        self.borderColor = borderColor
+        self.withRadioButton = withRadioButton
+        self.radioButtonStyle = radioButtonStyle
         self.bottomLabelStyle = bottomLabelStyle
         self.priceLabelStyle = priceLabelStyle
         self.topLabelStyle = topLabelStyle
@@ -34,7 +43,9 @@ extension SubscriptionStyle {
                                            offset: CGSize(width: 0, height: 0),
                                            radius: 20,
                                            opacity: 1.0),
-                            cornerRadius: 12)
+                            cornerRadius: 12),
+            withRadioButton: true,
+            radioButtonStyle: .init()
         )
     }
 }
