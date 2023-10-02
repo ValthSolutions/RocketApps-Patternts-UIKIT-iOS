@@ -44,7 +44,7 @@ extension LabelStyle {
         return LabelStyle(
             fontProfile: FontProfile(style: .caption1Regular),
             backgroundColor: .init(ColorScheme(light: .clear, dark: .clear)),
-            textColor: .init(ColorScheme(light: .black, dark: .white))
+            textColor: .init(ColorScheme(light: .black, dark: .black))
         )
     }
 }

@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 21.09.2023.
-//
-
 import UIKit
 
 public protocol TypographyApplicable {

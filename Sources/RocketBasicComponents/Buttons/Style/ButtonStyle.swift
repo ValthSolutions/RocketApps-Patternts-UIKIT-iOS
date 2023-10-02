@@ -64,7 +64,7 @@ extension ButtonStyle {
         return ButtonStyle(
             type: .primary(defaultColor: .init()),
             fontProfile: FontProfile(style: .caption1Regular),
-            textColor: ColorScheme(light: .black, dark: .white)
+            textColor: ColorScheme(light: .black, dark: .black)
         )
     }
 }

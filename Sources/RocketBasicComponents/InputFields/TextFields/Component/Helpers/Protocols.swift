@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 22.09.2023.
-//
 
 import UIKit
 

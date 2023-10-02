@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 20.09.2023.
-//
-
 import UIKit
 
 /// `BaseTabBarController` is an open class that provides a customizable tab bar controller with a prominent center button.

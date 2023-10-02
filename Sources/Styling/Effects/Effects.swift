@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 18.09.2023.
-//
-
 import UIKit
 
 /// Represents a collection of visual and interactive effects that can be applied to UI components.

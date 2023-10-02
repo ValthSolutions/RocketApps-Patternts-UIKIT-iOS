@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by LEMIN DAHOVICH on 28.04.2023.
-//
-
 import UIKit
 
 /// `NiblessCollectionViewCell` is a `UICollectionViewCell` subclass that avoids nib and storyboard initialization.
