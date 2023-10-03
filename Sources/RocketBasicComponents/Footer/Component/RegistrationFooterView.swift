@@ -38,25 +38,11 @@ open class RegistrationFooterView: NiblessView,
     }
     
     public func decorate(with style: FooterStyle) {
-        if let termsText = style.termsOfUseText {
-            termsLabel.text = termsText
-        }
-
-        if let privacyText = style.privacyPolicyText {
-            privacyLabel.text = privacyText
-        }
-
-        if let restorePurchaseText = style.restorePurchaseText {
-            restorePurchaseButton.setTitle(restorePurchaseText, for: .normal)
-        }
-        
-        if let termsLabelStyle = style.termsLabelStyle {
-            termsLabel.decorate(with: termsLabelStyle)
-        }
-        
-        if let privacyPolicyLabelStyle = style.privacyPolicyLabelStyle {
-            privacyLabel.decorate(with: privacyPolicyLabelStyle)
-        }
+        style.termsOfUseText.flatMap { termsLabel.text = $0 }
+        style.privacyPolicyText.flatMap { privacyLabel.text = $0 }
+        style.restorePurchaseText.flatMap { restorePurchaseButton.setTitle($0, for: .normal) }
+        style.termsLabelStyle.flatMap { termsLabel.decorate(with: $0) }
+        style.privacyPolicyLabelStyle.flatMap { privacyLabel.decorate(with: $0) }
         
         if let restorePurchaseButtonStyle = style.restorePurchaseButtonStyle {
             if let font = restorePurchaseButtonStyle.fontProfile {
