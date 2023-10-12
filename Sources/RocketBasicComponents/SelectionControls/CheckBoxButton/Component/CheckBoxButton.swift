@@ -35,7 +35,7 @@ open class CheckBoxButton: UIButton, Decoratable {
         
         isSelected.toggle()
         
-        handleTransformAndHaptic()
+        handleHaptic()
         updateBorder()
     }
     
@@ -128,15 +128,8 @@ extension CheckBoxButton {
 
 // MARK: - Haptics
 
-private extension CheckBoxButton {
-    func handleTransformAndHaptic() {
-        guard let effect = currentStyle?.effect else { return }
-        
-        if isHighlighted {
-            if let hapticStyle = effect.hapticFeedback {
-                let generator = UIImpactFeedbackGenerator(style: hapticStyle)
-                generator.impactOccurred()
-            }
-        }
+extension CheckBoxButton: HapticFeedbackable {
+    public var effect: Styling.Effects? {
+        self.currentStyle?.effect
     }
 }

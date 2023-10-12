@@ -26,7 +26,8 @@ open class BaseButton: UIButton,
     open override var isHighlighted: Bool {
         didSet {
             updateState()
-            handleTransformAndHaptic()
+            handleTransform()
+            handleHaptic()
         }
     }
     
@@ -41,9 +42,7 @@ open class BaseButton: UIButton,
     open func setStyle(_ style: Style, for state: UIButton.State) {
         styles[Int(state.rawValue)] = style
         
-        if self.state == state {
-            applyStyle(style)
-        }
+        self.state == state ? applyStyle(style) : ()
     }
     
     open func decorate(with style: Style) {
@@ -118,7 +117,7 @@ private extension BaseButton {
     }
     
     func applyRoundedEffect(rounded: Bool?, cornerRadius: CGFloat?) {
-        if let rounded = rounded, rounded {
+        if let rounded = rounded, rounded == true {
             self.layer.cornerRadius = self.bounds.height / 2
         } else if let cornerRadius = cornerRadius {
             self.layer.cornerRadius = cornerRadius
@@ -252,28 +251,38 @@ private extension BaseButton {
     }
     
     func updateState() {
-        if let style = styles[Int(self.state.rawValue)] {
-            applyStyle(style)
-            if case .secondary = currentStyleType {
-                let borderColor: UIColor? = !isEnabled ? disabledBorderColor?.color : (isHighlighted ? pressedBorderColor?.color : defaultBorderColor?.color)
-                layer.borderColor = borderColor?.cgColor
-            }
-            applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
+        guard let style = styles[Int(self.state.rawValue)] else { return }
+        applyStyle(style)
+        
+        if case .secondary = currentStyleType {
+            updateBorderColorForSecondaryStyle()
+        }
+        
+        applyRoundedEffect(rounded: currentEffect?.rounded, cornerRadius: currentEffect?.cornerRadius)
+    }
+
+    private func updateBorderColorForSecondaryStyle() {
+        if !isEnabled {
+            layer.borderColor = disabledBorderColor?.color.cgColor
+        } else if isHighlighted {
+            layer.borderColor = pressedBorderColor?.color.cgColor
+        } else {
+            layer.borderColor = defaultBorderColor?.color.cgColor
         }
     }
 }
 
 // MARK: - Transform
 
-private extension BaseButton {
-    func handleTransformAndHaptic() {
+extension BaseButton: HapticFeedbackable {
+    public var effect: Styling.Effects? {
+        self.currentEffect
+    }
+    
+    func handleTransform() {
         guard let effect = currentEffect else { return }
         
         if isHighlighted {
-            if let hapticStyle = effect.hapticFeedback {
-                let generator = UIImpactFeedbackGenerator(style: hapticStyle)
-                generator.impactOccurred()
-            }
             
             if let transformEffect = effect.transformEffect {
                 animateTransform(to: transformEffect)

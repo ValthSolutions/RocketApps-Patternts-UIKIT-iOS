@@ -9,7 +9,6 @@ open class ExpandableStackView: UIStackView, BaseInputViewDelegate {
         axis = .vertical
         alignment = .fill
         distribution = .equalSpacing
-        spacing = 8
         translatesAutoresizingMaskIntoConstraints = false
         for textField in textFields {
             textField.delegate = self

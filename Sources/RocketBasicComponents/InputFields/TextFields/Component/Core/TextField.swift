@@ -52,7 +52,6 @@ public class TextField: UITextField {
     public override func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
         return rect.insetBy(dx: 16.0, dy: 0.0)
-        
     }
     
     public override func placeholderRect(forBounds bounds: CGRect) -> CGRect {

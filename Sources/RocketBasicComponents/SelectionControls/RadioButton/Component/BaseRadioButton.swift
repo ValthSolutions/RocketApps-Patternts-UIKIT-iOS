@@ -35,7 +35,7 @@ open class BaseRadioButton: UIButton, Decoratable {
         
         isSelected.toggle()
         
-        handleTransformAndHaptic()
+        handleHaptic()
         updateBorder()
     }
     
@@ -122,15 +122,8 @@ extension BaseRadioButton {
 
 // MARK: - Haptics
 
-private extension BaseRadioButton {
-    func handleTransformAndHaptic() {
-        guard let effect = currentStyle?.effect else { return }
-        
-        if isHighlighted {
-            if let hapticStyle = effect.hapticFeedback {
-                let generator = UIImpactFeedbackGenerator(style: hapticStyle)
-                generator.impactOccurred()
-            }
-        }
+extension BaseRadioButton: HapticFeedbackable {
+    public var effect: Styling.Effects? {
+        self.currentStyle?.effect
     }
 }

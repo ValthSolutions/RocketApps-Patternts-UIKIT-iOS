@@ -60,9 +60,11 @@ extension ValidationHolder {
 
 extension ValidationHolder {
     private func buildFieldViewToValidationFunction() -> [BaseInputView: ValidationFunction] {
-        return validationChains.mapValues { validationChain in { combinedPublisher in
-            self.createValidationPublisher(combinedPublisher, validator: validationChain.validate)
-        }
+        return validationChains.mapValues {
+            validationChain in {
+                combinedPublisher in
+                self.createValidationPublisher(combinedPublisher, validator: validationChain.validate)
+            }
         }
     }
 }
