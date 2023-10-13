@@ -13,19 +13,20 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     public typealias Style = CenteredTabBarStyle
     
     /// The layer that holds the shape around the center button.
-    private var shapeLayer: CALayer?
+    open var shapeLayer: CALayer?
     
     /// The index for the center tab. By default, it is set to 0.
     open var centerTabIndex: Int = 0
     
-    
     /// Center button that is displayed prominently on the tab bar.
-    private var centerButton: UIButton? {
+    open var centerButton: UIButton? {
         didSet {
             updateCenterButtonState()
         }
     }
     
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         updateCenterButtonState()
@@ -42,22 +43,26 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     }
         
     open func decorate(with style: CenteredTabBarStyle) {
+        if centerButton == nil {
+            setupCenterButton()
+        }
+        
         if let unselectedTintColor = style.unselectedItemTintColor {
             self.unselectedItemTintColor = unselectedTintColor.color
         }
         
         if let tintColor = style.tintColor {
             self.tintColor = tintColor.color
+            self.centerButton?.tintColor = tintColor.color
         }
         
-        if let centerIcon = style.centerIcon {
+        if let centerIcon = style.centerIcon?.withRenderingMode(.alwaysTemplate) {
             centerButton?.setImage(centerIcon, for: .normal)
             centerButton?.setImage(centerIcon, for: .highlighted)
         }
     }
-    // MARK: - Init
-    
-    private func setupInitialState() {
+
+    open func setupInitialState() {
         updateCenterButtonState()
     }
     
@@ -70,7 +75,7 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         }
     }
     
-    private func setupCenterButton() {
+    open func setupCenterButton() {
         let button = UIButton(type: .custom)
         button.frame = CGRect(x: (self.bounds.width - 56) / 2, y: -28, width: 56, height: 56)
         button.backgroundColor = .gray
@@ -93,10 +98,9 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     
     open override func draw(_ rect: CGRect) {
         addShape()
-        setupCenterButton()
     }
     
-    private func addShape() {
+    open func addShape() {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = createPathCircle()
         shapeLayer.strokeColor = UIColor.lightGray.cgColor
@@ -112,7 +116,7 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         self.shapeLayer = shapeLayer
     }
     
-    private func createPathCircle() -> CGPath {
+    open func createPathCircle() -> CGPath {
         let radius: CGFloat = 37.0
         let path = UIBezierPath()
         let centerWidth = self.frame.width / 2
@@ -131,7 +135,7 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     
     // MARK: - Helper Methods
     
-    private func findTabBarController() -> UITabBarController? {
+    open func findTabBarController() -> UITabBarController? {
         var nextResponder = self.next
         while nextResponder != nil {
             if let tabBarVC = nextResponder as? UITabBarController {
@@ -149,10 +153,5 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
             return centerButton
         }
         return super.hitTest(point, with: event)
-    }
-    
-    open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let buttonRadius: CGFloat = 35
-        return abs(self.center.x - point.x) > buttonRadius || abs(point.y) > buttonRadius
     }
 }
