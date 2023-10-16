@@ -50,7 +50,8 @@ open class ButtonStyle {
         iconPosition: Position? = nil,
         effect: Effects? = nil,
         spacing: Spacing? = nil,
-        textColor: ColorScheme? = ColorScheme(light: .black, dark: .white)
+        textColor: ColorScheme? = ColorScheme(light: .black, dark: .white),
+        layoutMargins: UIEdgeInsets? = nil
     ) {
         self.type = type
         self.textColor = textColor
@@ -59,6 +60,7 @@ open class ButtonStyle {
         self.iconPosition = iconPosition
         self.effect = effect
         self.spacing = spacing
+        self.layoutMargins = layoutMargins
     }
 }
 
