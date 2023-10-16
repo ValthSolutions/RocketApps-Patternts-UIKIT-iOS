@@ -239,6 +239,7 @@ private extension BaseButton {
         hStack.translatesAutoresizingMaskIntoConstraints = false
         hStack.setEdges()
         hStack.isUserInteractionEnabled = false
+        hStack.distribution = .fillEqually
         self.stackView = hStack
         self.iconImageView = iconIV
     }
