@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "ios-layout",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:Paletech/iOS-layout.git",
+      "state" : {
+        "branch" : "develop",
+        "revision" : "a1c32542a470118a570cf575ffc0ac7f622fb749"
+      }
+    }
+  ],
+  "version" : 2
+}

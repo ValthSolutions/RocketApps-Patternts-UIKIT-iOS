@@ -32,6 +32,9 @@ open class ButtonStyle {
     /// Specifies the position of icon relatively a text.
     var iconPosition: Position?
     
+    /// Specifies the margins of Stack View
+    var layoutMargins: UIEdgeInsets?
+    
     /// Initializes a new `ButtonStyle` with the specified attributes.
     ///
     /// - Parameters:
@@ -47,7 +50,8 @@ open class ButtonStyle {
         iconPosition: Position? = nil,
         effect: Effects? = nil,
         spacing: Spacing? = nil,
-        textColor: ColorScheme? = ColorScheme(light: .black, dark: .white)
+        textColor: ColorScheme? = ColorScheme(light: .black, dark: .white),
+        layoutMargins: UIEdgeInsets? = nil
     ) {
         self.type = type
         self.textColor = textColor
@@ -56,6 +60,7 @@ open class ButtonStyle {
         self.iconPosition = iconPosition
         self.effect = effect
         self.spacing = spacing
+        self.layoutMargins = layoutMargins
     }
 }
 
