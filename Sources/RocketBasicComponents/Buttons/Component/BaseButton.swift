@@ -239,9 +239,13 @@ private extension BaseButton {
         hStack.translatesAutoresizingMaskIntoConstraints = false
         hStack.setEdges()
         hStack.isUserInteractionEnabled = false
-        hStack.distribution = .fillEqually
+//        hStack.distribution = .fillEqually
+
+        
         self.stackView = hStack
         self.iconImageView = iconIV
+        hStack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        hStack.isLayoutMarginsRelativeArrangement = true
     }
     
     
