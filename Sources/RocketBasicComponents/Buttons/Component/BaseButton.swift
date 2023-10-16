@@ -52,7 +52,8 @@ open class BaseButton: UIButton,
                              fontProfile: style.fontProfile,
                              spacing: style.spacing,
                              textColor: style.textColor,
-                             iconPosition: style.iconPosition)
+                             iconPosition: style.iconPosition,
+                             layoutMargins: style.layoutMargins)
         applyEffects(style.effect)
         if let blurStyle = style.effect?.blur?.style {
             self.addBlur(effectStyle: blurStyle)
@@ -182,7 +183,8 @@ private extension BaseButton {
                               fontProfile: FontProfile?,
                               spacing: Spacing?,
                               textColor: ColorScheme?,
-                              iconPosition: Position?) {
+                              iconPosition: Position?,
+                              layoutMargins: UIEdgeInsets?) {
         guard let icon = icon, stackView == nil else {
             self.setTitle(title, for: .normal)
             if let fontProfile = fontProfile {
@@ -212,13 +214,15 @@ private extension BaseButton {
         configureAndAddStackView(with: iconIV,
                                  textButton: textButton,
                                  spacing: spacing,
-                                 iconPosition: iconPosition)
+                                 iconPosition: iconPosition,
+                                 layoutMargins: layoutMargins)
     }
     
     func configureAndAddStackView(with iconIV: UIImageView,
                                   textButton: UIButton,
                                   spacing: Spacing?,
-                                  iconPosition: Position?) {
+                                  iconPosition: Position?,
+                                  layoutMargins: UIEdgeInsets?) {
 
         var arrangedSubviews: [UIView] = []
         
@@ -239,12 +243,10 @@ private extension BaseButton {
         hStack.translatesAutoresizingMaskIntoConstraints = false
         hStack.setEdges()
         hStack.isUserInteractionEnabled = false
-//        hStack.distribution = .fillEqually
-
         
         self.stackView = hStack
         self.iconImageView = iconIV
-        hStack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        hStack.layoutMargins = layoutMargins ?? UIEdgeInsets(top: 0, left: Spacing.step3.rawValue, bottom: 0, right: Spacing.step3.rawValue)
         hStack.isLayoutMarginsRelativeArrangement = true
     }
     

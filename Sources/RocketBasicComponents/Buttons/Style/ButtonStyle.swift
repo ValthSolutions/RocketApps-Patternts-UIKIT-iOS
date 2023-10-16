@@ -32,6 +32,9 @@ open class ButtonStyle {
     /// Specifies the position of icon relatively a text.
     var iconPosition: Position?
     
+    /// Specifies the margins of Stack View
+    var layoutMargins: UIEdgeInsets?
+    
     /// Initializes a new `ButtonStyle` with the specified attributes.
     ///
     /// - Parameters:
