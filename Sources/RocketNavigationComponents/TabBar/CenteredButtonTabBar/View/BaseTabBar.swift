@@ -26,8 +26,8 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     }
     
     // MARK: - Init
-
-    override init(frame: CGRect) {
+    
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         updateCenterButtonState()
     }
@@ -41,10 +41,18 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
             updateCenterButtonState()
         }
     }
-        
+    
     open func decorate(with style: CenteredTabBarStyle) {
+        if let shadowTabBarEffect = style.shadowEffectTabBar {
+            addShadow(shadowEffect: shadowTabBarEffect)
+        }
+        
         if centerButton == nil {
             setupCenterButton()
+        }
+        
+        if let shadowButtonEffect = style.shadowEffectButton {
+            addShadowToButton(shadowEffect: shadowButtonEffect)
         }
         
         if let unselectedTintColor = style.unselectedItemTintColor {
@@ -61,7 +69,7 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
             centerButton?.setImage(centerIcon, for: .highlighted)
         }
     }
-
+    
     open func setupInitialState() {
         updateCenterButtonState()
     }
@@ -80,7 +88,6 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         button.frame = CGRect(x: (self.bounds.width - 56) / 2, y: -28, width: 56, height: 56)
         button.backgroundColor = .gray
         button.layer.cornerRadius = 28
-        button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(centerButtonTapped), for: .touchUpInside)
         self.addSubview(button)
         self.centerButton = button
@@ -103,17 +110,34 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     open func addShape() {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = createPathCircle()
-        shapeLayer.strokeColor = UIColor.lightGray.cgColor
         shapeLayer.fillColor = UIColor.white.cgColor
         shapeLayer.lineWidth = 1.0
         
         if let oldShapeLayer = self.shapeLayer {
             self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
         } else {
-            self.layer.insertSublayer(shapeLayer, at: 0)
+            self.layer.insertSublayer(shapeLayer, above: self.layer)
         }
         
         self.shapeLayer = shapeLayer
+    }
+    
+    open func addShadowToButton(shadowEffect: Shadow) {
+        guard let centerButton = self.centerButton else { return }
+        
+        centerButton.layer.shadowColor = shadowEffect.color.cgColor
+        centerButton.layer.shadowOpacity = shadowEffect.opacity
+        centerButton.layer.shadowOffset = shadowEffect.offset
+        centerButton.layer.shadowRadius = shadowEffect.radius
+        centerButton.layer.shadowPath = UIBezierPath(roundedRect: centerButton.bounds, cornerRadius: centerButton.layer.cornerRadius).cgPath
+    }
+    
+    open func addShadow(shadowEffect: Shadow) {
+        self.layer.shadowColor = shadowEffect.color.cgColor
+        self.layer.shadowOpacity = shadowEffect.opacity
+        self.layer.shadowOffset = shadowEffect.offset
+        self.layer.shadowRadius = shadowEffect.radius
+        self.layer.shadowPath = createPathCircle()
     }
     
     open func createPathCircle() -> CGPath {
