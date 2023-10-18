@@ -8,13 +8,16 @@ public struct CenteredTabBarStyle {
     var centerIcon: UIImage?
     var shadowEffectTabBar: Shadow?
     var shadowEffectButton: Shadow?
+    var centerIconSelectionColor: (on: ColorScheme?, off: ColorScheme?)?
     
     public init(unselectedItemTintColor: ColorScheme? = nil,
                 tintColor: ColorScheme? = nil,
                 centerIcon: UIImage? = nil,
+                centerIconSelectionColor: (on: ColorScheme?, off: ColorScheme?)? = nil,
                 shadowEffectTabBar: Shadow? = nil,
                 shadowEffectButton: Shadow? = nil
     ) {
+        self.centerIconSelectionColor = centerIconSelectionColor
         self.unselectedItemTintColor = unselectedItemTintColor
         self.shadowEffectTabBar = shadowEffectTabBar
         self.shadowEffectButton = shadowEffectButton

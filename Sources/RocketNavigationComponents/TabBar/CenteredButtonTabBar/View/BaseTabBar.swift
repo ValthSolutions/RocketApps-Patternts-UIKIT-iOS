@@ -25,6 +25,8 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         }
     }
     
+    private var currentStyle: CenteredTabBarStyle?
+
     // MARK: - Init
     
     public override init(frame: CGRect) {
@@ -43,6 +45,8 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     }
     
     open func decorate(with style: CenteredTabBarStyle) {
+        currentStyle = style
+
         if let shadowTabBarEffect = style.shadowEffectTabBar {
             addShadow(shadowEffect: shadowTabBarEffect)
         }
@@ -61,7 +65,6 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         
         if let tintColor = style.tintColor {
             self.tintColor = tintColor.color
-            self.centerButton?.tintColor = tintColor.color
         }
         
         if let centerIcon = style.centerIcon?.withRenderingMode(.alwaysTemplate) {
@@ -70,17 +73,16 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         }
     }
     
-    open func setupInitialState() {
-        updateCenterButtonState()
-    }
-    
     // MARK: - Center Button Methods
     
     /// Updates the appearance of the center button based on whether it is the selected tab.
     open func updateCenterButtonState() {
-        if let tabBarVC = findTabBarController() {
-            centerButton?.tintColor = (tabBarVC.selectedIndex == centerTabIndex) ? self.tintColor : tabBarVC.tabBar.unselectedItemTintColor
-        }
+        guard let tabBarVC = findTabBarController() else { return }
+        let isSelected = tabBarVC.selectedIndex == centerTabIndex
+        let colorScheme = isSelected ? currentStyle?.centerIconSelectionColor?.on : currentStyle?.centerIconSelectionColor?.off
+        let currentMode = traitCollection.userInterfaceStyle
+        let color: UIColor = currentMode == .dark ? colorScheme?.dark ?? .white : colorScheme?.light ?? .white
+        centerButton?.tintColor = color
     }
     
     open func setupCenterButton() {
@@ -116,7 +118,11 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
         if let oldShapeLayer = self.shapeLayer {
             self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
         } else {
-            self.layer.insertSublayer(shapeLayer, above: self.layer)
+            if let firstSubviewLayer = self.subviews.first?.layer {
+                self.layer.insertSublayer(shapeLayer, below: firstSubviewLayer)
+            } else {
+                self.layer.addSublayer(shapeLayer)
+            }
         }
         
         self.shapeLayer = shapeLayer
