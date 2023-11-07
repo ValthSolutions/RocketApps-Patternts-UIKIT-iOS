@@ -26,6 +26,7 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     }
     
     private var currentStyle: CenteredTabBarStyle?
+    open var centerButtonClicked: (() -> Void)?
 
     // MARK: - Init
     
@@ -98,8 +99,7 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
     
     @objc private func centerButtonTapped() {
         if let tabBarVC = findTabBarController() {
-            tabBarVC.selectedIndex = centerTabIndex
-            updateCenterButtonState()
+            centerButtonClicked?()
         }
     }
     
@@ -174,14 +174,5 @@ open class BaseCenteredTabBar: UITabBar, Decoratable {
             nextResponder = nextResponder?.next
         }
         return nil
-    }
-    
-    // MARK: - Touch Handling
-    
-    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let centerButton = self.centerButton, centerButton.frame.contains(point) {
-            return centerButton
-        }
-        return super.hitTest(point, with: event)
     }
 }

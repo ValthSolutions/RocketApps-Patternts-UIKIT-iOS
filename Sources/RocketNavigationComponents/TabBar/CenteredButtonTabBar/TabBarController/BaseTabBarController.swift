@@ -8,7 +8,7 @@ open class BaseTabBarController: UITabBarController,
     
     /// Specifies the index of the center tab. It is important to set this property to get the desired behavior.
     /// Default value is 0.
-    open var centerTabIndex: Int = 0 {
+    open var centerTabIndex: Int = 2 {
         didSet {
             customTabBar?.centerTabIndex = centerTabIndex
         }

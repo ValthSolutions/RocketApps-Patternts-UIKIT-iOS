@@ -17,6 +17,7 @@ open class BaseButton: UIButton,
     private var disabledBorderColor: ColorScheme?
     private var currentStyleType: ButtonStyleType?
     private var currentEffect: Effects?
+    private var currentFontProfile: FontProfile?
     private var originalTransform: CGAffineTransform?
     private var title: String?
     private var styles: [Int: ButtonStyle] = [:]
@@ -37,6 +38,7 @@ open class BaseButton: UIButton,
     
     open override func setTitle(_ title: String?, for state: UIControl.State) {
         self.title = title
+        configureTypography(with: currentFontProfile)
     }
     
     open func setStyle(_ style: Style, for state: UIButton.State) {
@@ -46,6 +48,7 @@ open class BaseButton: UIButton,
     }
     
     open func decorate(with style: Style) {
+        self.currentFontProfile = style.fontProfile
         configureStyle(type: style.type)
         configureTypography(with: style.fontProfile)
         configureIconAndText(with: style.icon,
@@ -202,11 +205,6 @@ private extension BaseButton {
         let textButton = UIButton()
         textButton.setTitle(title, for: .normal)
         textButton.isUserInteractionEnabled = false
-        if let fontProfile = fontProfile {
-            textButton.setAttributedTitle(Typography.attributedString(for: fontProfile,
-                                                                      text: self.titleLabel?.text ?? ""),
-                                          for: .normal)
-        }
         if let textColor = textColor {
             textButton.setTitleColor(textColor.color, for: .normal)
         }
@@ -216,6 +214,10 @@ private extension BaseButton {
                                  spacing: spacing,
                                  iconPosition: iconPosition,
                                  layoutMargins: layoutMargins)
+        guard let fontProfile else { return }
+        textButton.setAttributedTitle(Typography.attributedString(for: fontProfile, 
+                                                            text: title ?? ""),
+                                for: .normal)
     }
     
     func configureAndAddStackView(with iconIV: UIImageView,
