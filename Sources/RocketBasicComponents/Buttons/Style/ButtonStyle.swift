@@ -35,6 +35,8 @@ open class ButtonStyle {
     /// Specifies the margins of Stack View
     var layoutMargins: UIEdgeInsets?
     
+    var iconSize: CGSize?
+    
     /// Initializes a new `ButtonStyle` with the specified attributes.
     ///
     /// - Parameters:
@@ -48,11 +50,13 @@ open class ButtonStyle {
         fontProfile: FontProfile? = nil,
         icon: UIImage? = nil,
         iconPosition: Position? = nil,
+        iconSize: CGSize? = nil,
         effect: Effects? = nil,
         spacing: Spacing? = nil,
         textColor: ColorScheme? = ColorScheme(light: .black, dark: .white),
         layoutMargins: UIEdgeInsets? = nil
     ) {
+        self.iconSize = iconSize
         self.type = type
         self.textColor = textColor
         self.fontProfile = fontProfile
