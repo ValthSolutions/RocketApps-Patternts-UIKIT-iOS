@@ -5,19 +5,49 @@ import PackageDescription
 
 let package = Package(
     name: "RocketApps-Patternts-UIKIT-iOS",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "RocketApps-Patternts-UIKIT-iOS",
-            targets: ["RocketApps-Patternts-UIKIT-iOS"]),
+    platforms: [
+        .iOS(.v14)
     ],
+    products: [
+        .library(
+            name: "Styling",
+            targets: ["Styling"]),
+        .library(
+            name: "RocketComponents",
+            targets: ["RocketComponents"]),
+        .library(
+            name: "RocketNavigationComponents",
+            targets: ["RocketNavigationComponents"]),
+        .library(
+            name: "RocketBasicComponents",
+            targets: ["RocketBasicComponents"]),
+    ],
+    
+    dependencies: [
+        .package(url: "https://github.com/Paletech/iOS-layout.git", branch: "develop")
+    ],
+    
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "RocketApps-Patternts-UIKIT-iOS"),
-        .testTarget(
-            name: "RocketApps-Patternts-UIKIT-iOSTests",
-            dependencies: ["RocketApps-Patternts-UIKIT-iOS"]),
+            name: "Styling",
+            resources: [
+                .process("Resources")
+            ]),
+        .target(
+            name: "RocketComponents",
+            dependencies: ["Styling",
+                           "RocketNavigationComponents",
+                           "RocketBasicComponents"]),
+        .target(
+            name: "RocketNavigationComponents",
+            dependencies: ["Styling"]),
+        .target(
+            name: "RocketBasicComponents",
+            dependencies: ["Styling",
+                           .product(name: "LayoutKit", package: "iOS-layout")
+            ], resources: [
+                .process("NavigationController/Resources")
+            ]
+        ),
     ]
 )

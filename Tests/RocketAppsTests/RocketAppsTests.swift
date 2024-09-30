@@ -1,7 +1,7 @@
 import XCTest
-@testable import RocketApps_Patternts_UIKIT_iOS
+@testable import RocketApps
 
-final class RocketApps_Patternts_UIKIT_iOSTests: XCTestCase {
+final class RocketAppsTests: XCTestCase {
     func testExample() throws {
         // XCTest Documenation
         // https://developer.apple.com/documentation/xctest
