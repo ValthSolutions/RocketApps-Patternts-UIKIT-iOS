@@ -4,6 +4,12 @@ import Foundation
 ///
 /// This enum provides a set of predefined spacing increments,
 /// ensuring consistent gaps and padding across the application's UI.
+///
+
+@available(
+    *, deprecated,
+     message: "Replace with Space.step16 or appropriate Space constant")
+
 public enum Spacing: RawRepresentable {
     
     public typealias RawValue = CGFloat

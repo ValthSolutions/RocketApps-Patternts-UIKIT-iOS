@@ -24,7 +24,7 @@ let package = Package(
     ],
     
     dependencies: [
-        .package(url: "git@github.com:Paletech/iOS-layout.git", branch: "develop")
+        .package(url: "https://github.com/Paletech/iOS-layout.git", branch: "develop")
     ],
     
     targets: [

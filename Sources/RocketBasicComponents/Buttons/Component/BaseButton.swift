@@ -56,6 +56,7 @@ open class BaseButton: UIButton,
                              spacing: style.spacing,
                              textColor: style.textColor,
                              iconPosition: style.iconPosition,
+                             iconSize: style.iconSize,
                              layoutMargins: style.layoutMargins)
         applyEffects(style.effect)
         if let blurStyle = style.effect?.blur?.style {
@@ -187,6 +188,7 @@ private extension BaseButton {
                               spacing: Spacing?,
                               textColor: ColorScheme?,
                               iconPosition: Position?,
+                              iconSize: CGSize? = nil,
                               layoutMargins: UIEdgeInsets?) {
         guard let icon = icon, stackView == nil else {
             self.setTitle(title, for: .normal)
@@ -201,7 +203,7 @@ private extension BaseButton {
             return
         }
         
-        let iconIV = createIconView(with: icon)
+        let iconIV = createIconView(with: icon, size: iconSize)
         let textButton = UIButton()
         textButton.setTitle(title, for: .normal)
         textButton.isUserInteractionEnabled = false
@@ -225,36 +227,35 @@ private extension BaseButton {
                                   spacing: Spacing?,
                                   iconPosition: Position?,
                                   layoutMargins: UIEdgeInsets?) {
+        
+        let isHorizontal = iconPosition == .left || iconPosition == .right
+        let arrangedSubviews = (iconPosition == .right || iconPosition == .bottom) ? [textButton, iconIV] : [iconIV, textButton]
 
-        var arrangedSubviews: [UIView] = []
-        
-        if iconPosition == .left {
-            arrangedSubviews = [iconIV, textButton]
-        } else if iconPosition == .right {
-            arrangedSubviews = [textButton, iconIV]
-        } else {
-            arrangedSubviews = [iconIV]
-        }
-        
-        let hStack = UIStackView(arrangedSubviews: arrangedSubviews)
-        hStack.spacing = spacing?.rawValue ?? Spacing.step3.rawValue
-        hStack.alignment = .center
-        hStack.axis = .horizontal
-            
-        self.addSubview(hStack)
-        hStack.translatesAutoresizingMaskIntoConstraints = false
-        hStack.setEdges()
-        hStack.isUserInteractionEnabled = false
-        
-        self.stackView = hStack
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.spacing = spacing?.rawValue ?? Space.step8
+        stackView.alignment = .center
+        stackView.axis = isHorizontal ? .horizontal : .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.isUserInteractionEnabled = false
+        stackView.layoutMargins = layoutMargins ?? UIEdgeInsets(top: 0, left: Space.step8, bottom: 0, right: Space.step8)
+        stackView.isLayoutMarginsRelativeArrangement = true
+
+        addSubview(stackView)
+        stackView.setEdges()
+
+        self.stackView = stackView
         self.iconImageView = iconIV
-        hStack.layoutMargins = layoutMargins ?? UIEdgeInsets(top: 0, left: Spacing.step3.rawValue, bottom: 0, right: Spacing.step3.rawValue)
-        hStack.isLayoutMarginsRelativeArrangement = true
     }
     
-    
-    func createIconView(with icon: UIImage) -> UIImageView {
+    func createIconView(with icon: UIImage, size: CGSize? = nil) -> UIImageView {
         let iconIV = UIImageView(image: icon)
+         
+        if let size = size {
+            iconIV.makeConstraints { make in
+                make.height.equalTo(size.height)
+                make.width.equalTo(size.width)
+            }
+        }
         iconIV.contentMode = .scaleAspectFit
         return iconIV
     }
